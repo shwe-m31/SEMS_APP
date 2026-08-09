@@ -1,0 +1,281 @@
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.landing-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--primary-color);
+}
+
+.landing-nav {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+}
+
+.landing-nav a {
+  text-decoration: none;
+  color: var(--dark-color);
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.landing-nav a:hover {
+  color: var(--primary-color);
+}
+
+.login-btn {
+  padding: 0.5rem 1.5rem;
+  background: var(--primary-color);
+  color: white !important;
+  border-radius: 5px;
+}
+
+.hero-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4rem 3rem;
+  min-height: calc(100vh - 80px);
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 600px;
+  color: white;
+}
+
+.hero-title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+  line-height: 1.2;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  opacity: 0.9;
+}
+
+.industry-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.tag {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.btn-primary {
+  background: white;
+  color: var(--primary-color);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(10px);
+}
+
+.hero-illustration {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hierarchy-diagram {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 2rem;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.hierarchy-level {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.hierarchy-node {
+  padding: 1rem 2rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-align: center;
+  min-width: 200px;
+}
+
+.owner {
+  background: var(--primary-color);
+  color: white;
+}
+
+.branches {
+  background: var(--info-color);
+  color: white;
+}
+
+.admins {
+  background: var(--warning-color);
+  color: white;
+}
+
+.workers {
+  background: var(--success-color);
+  color: white;
+}
+
+.centralized {
+  background: var(--dark-color);
+  color: white;
+}
+
+.hierarchy-arrow {
+  text-align: center;
+  font-size: 1.5rem;
+  color: var(--gray-color);
+}
+
+.features-section {
+  background: white;
+  padding: 4rem 3rem;
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  color: var(--dark-color);
+  margin-bottom: 3rem;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.feature-card {
+  background: var(--light-color);
+  padding: 2rem;
+  border-radius: 10px;
+  text-align: center;
+  transition: transform 0.3s;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.feature-card h3 {
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.feature-card p {
+  color: var(--gray-color);
+}
+
+.about-section {
+  background: var(--light-color);
+  padding: 4rem 3rem;
+  text-align: center;
+}
+
+.about-text {
+  max-width: 800px;
+  margin: 0 auto;
+  color: var(--gray-color);
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.landing-footer {
+  background: var(--dark-color);
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+@media (max-width: 768px) {
+  .landing-header {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .landing-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .hero-section {
+    flex-direction: column;
+    padding: 2rem 1rem;
+    text-align: center;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .industry-tags {
+    justify-content: center;
+  }
+
+  .hero-illustration {
+    margin-top: 2rem;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}

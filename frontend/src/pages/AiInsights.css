@@ -1,0 +1,261 @@
+.ai-insights {
+  min-height: 100vh;
+  background: var(--light-color);
+}
+
+.ai-content {
+  display: flex;
+  min-height: calc(100vh - 70px);
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  overflow-y: auto;
+}
+
+.dashboard-header h2 {
+  font-size: 1.8rem;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.subtitle {
+  color: var(--gray-color);
+  margin-bottom: 2rem;
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.ai-card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.ai-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.ai-card-header {
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+}
+
+.ai-icon {
+  font-size: 2.5rem;
+}
+
+.ai-card-header h3 {
+  font-size: 1.2rem;
+  margin: 0;
+}
+
+.ai-card-body {
+  padding: 1.5rem;
+}
+
+.forecast-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.forecast-item:last-child {
+  border-bottom: none;
+}
+
+.forecast-item .label {
+  color: var(--gray-color);
+  font-weight: 500;
+}
+
+.forecast-item .value {
+  color: var(--dark-color);
+  font-weight: 600;
+}
+
+.forecast-item .value.highlight {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.forecast-item .value.alert {
+  color: var(--danger-color);
+  font-size: 1.1rem;
+}
+
+.forecast-item .value.trend-increasing {
+  color: var(--success-color);
+}
+
+.forecast-item .value.trend-decreasing {
+  color: var(--danger-color);
+}
+
+.forecast-item .value.trend-stable {
+  color: var(--info-color);
+}
+
+.recommendation {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: var(--light-color);
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color);
+}
+
+.recommendation strong {
+  color: var(--dark-color);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.recommendation p {
+  color: var(--gray-color);
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.anomalies-list {
+  margin-top: 1rem;
+}
+
+.anomaly-item {
+  padding: 1rem;
+  background: var(--light-color);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--warning-color);
+}
+
+.anomaly-type {
+  font-weight: 600;
+  color: var(--dark-color);
+  margin-bottom: 0.5rem;
+}
+
+.anomaly-description {
+  color: var(--gray-color);
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.anomaly-severity {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.anomaly-severity.severity-high {
+  background: #fee;
+  color: #c33;
+}
+
+.anomaly-severity.severity-medium {
+  background: #ffd;
+  color: #990;
+}
+
+.anomaly-severity.severity-low {
+  background: #efe;
+  color: #393;
+}
+
+.anomaly-severity.severity-critical {
+  background: #f00;
+  color: white;
+}
+
+.possible-causes {
+  margin-top: 0.75rem;
+}
+
+.possible-causes strong {
+  color: var(--dark-color);
+  font-size: 0.85rem;
+}
+
+.possible-causes ul {
+  margin: 0.5rem 0 0 1.5rem;
+  padding: 0;
+}
+
+.possible-causes li {
+  color: var(--gray-color);
+  font-size: 0.85rem;
+  margin: 0.25rem 0;
+}
+
+.no-anomalies {
+  text-align: center;
+  padding: 2rem;
+  color: var(--success-color);
+}
+
+.no-anomalies p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.demo-notice {
+  background: #fff3cd;
+  border: 1px solid #ffc107;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+}
+
+.demo-notice p {
+  color: #856404;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .ai-content {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    width: 100%;
+    padding: 1rem;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.5rem;
+  }
+
+  .nav-item {
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+  }
+
+  .ai-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .main-content {
+    padding: 1rem;
+  }
+}
