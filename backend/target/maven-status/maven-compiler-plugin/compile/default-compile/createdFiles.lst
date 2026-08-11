@@ -23,6 +23,7 @@ com\sems\dto\RegisterRequest.class
 com\sems\entity\Branch.class
 com\sems\entity\Expense$ExpenseCategory.class
 com\sems\controller\TaskController.class
+com\sems\controller\NotificationController.class
 com\sems\service\SalesService.class
 com\sems\controller\WorkerController.class
 com\sems\service\LogisticsService.class
@@ -33,6 +34,7 @@ com\sems\security\JwtTokenProvider.class
 com\sems\entity\Logistics$LogisticsStatus.class
 com\sems\entity\User.class
 com\sems\entity\Notification.class
+com\sems\service\AdminService.class
 com\sems\entity\Logistics.class
 com\sems\service\BillingService.class
 com\sems\repository\BillRepository.class
@@ -49,11 +51,13 @@ com\sems\entity\Bill.class
 com\sems\entity\Attendance.class
 com\sems\entity\Notification$NotificationType.class
 com\sems\dto\JwtResponse.class
+com\sems\entity\WorkerShift.class
 com\sems\repository\AdminRepository.class
 com\sems\entity\Expense.class
 com\sems\controller\BillingController.class
 com\sems\controller\LogisticsController.class
 com\sems\repository\AttendanceRepository.class
+com\sems\service\NotificationService.class
 com\sems\entity\Task$Priority.class
 com\sems\controller\ShiftController.class
 com\sems\controller\InventoryController.class
@@ -81,6 +85,7 @@ com\sems\entity\AiPrediction.class
 com\sems\service\InventoryService.class
 com\sems\repository\BranchRepository.class
 com\sems\repository\ShiftRepository.class
+com\sems\controller\AdminController.class
 com\sems\controller\DashboardController.class
 com\sems\controller\SalesController.class
 com\sems\security\UserPrincipal.class

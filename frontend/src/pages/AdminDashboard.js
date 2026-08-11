@@ -8,7 +8,7 @@ function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
-  const [branchId, setBranchId] = useState(1);
+  const [branchId, setBranchId] = useState(user?.branchId || 1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -51,8 +51,8 @@ function AdminDashboard() {
       <div className="dashboard-content">
         <aside className="sidebar">
           <nav className="sidebar-nav">
-            <a href="#" className="nav-item active">Dashboard</a>
-            <a href="#" className="nav-item">Workers</a>
+            <a href="/admin-dashboard" className="nav-item active">Dashboard</a>
+            <a href="/workers" className="nav-item">Workers</a>
             <a href="#" className="nav-item">Tasks</a>
             <a href="#" className="nav-item">Attendance</a>
             <a href="#" className="nav-item">Shifts</a>
@@ -73,6 +73,7 @@ function AdminDashboard() {
             {dashboardData?.branch && (
               <p className="branch-name">{dashboardData.branch.name}</p>
             )}
+            <button onClick={() => navigate('/workers')} className="btn btn-primary">Manage Workers</button>
           </div>
 
           <div className="kpi-grid">
@@ -120,7 +121,7 @@ function AdminDashboard() {
           <div className="section">
             <h3>Quick Actions</h3>
             <div className="action-grid">
-              <button className="action-card">
+              <button onClick={() => navigate('/workers')} className="action-card">
                 <span className="action-icon">➕</span>
                 <span>Add Worker</span>
               </button>
@@ -137,10 +138,6 @@ function AdminDashboard() {
                 <span>Create Bill</span>
               </button>
             </div>
-          </div>
-
-          <div className="demo-notice">
-            <p>⚠️ Demo Mode: This is a prototype with sample data for demonstration purposes.</p>
           </div>
         </main>
       </div>

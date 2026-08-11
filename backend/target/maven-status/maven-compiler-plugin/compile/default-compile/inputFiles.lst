@@ -18,6 +18,7 @@ C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\AuthCo
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\UserRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\security\SecurityConfig.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Inventory.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\NotificationService.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\AiAnalyticsController.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Worker.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\User.java
@@ -28,6 +29,7 @@ C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\security\CustomUs
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\security\UserPrincipal.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\OrganizationRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\dto\JwtResponse.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\AdminService.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\AttendanceService.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\ShiftService.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\dto\ApiResponse.java
@@ -54,10 +56,12 @@ C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\Attend
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\TaskRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\security\JwtTokenProvider.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\InventoryController.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\AdminController.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\DashboardController.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\NotificationRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\WorkerRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\BillingController.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\WorkerShift.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\TaskController.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Sales.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Product.java
@@ -70,3 +74,4 @@ C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\WorkerSer
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Task.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\ProductRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\SalesController.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\NotificationController.java

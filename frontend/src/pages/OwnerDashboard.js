@@ -50,8 +50,8 @@ function OwnerDashboard() {
       <div className="dashboard-content">
         <aside className="sidebar">
           <nav className="sidebar-nav">
-            <a href="#" className="nav-item active">Dashboard</a>
-            <a href="#" className="nav-item">Branches</a>
+            <a href="/owner-dashboard" className="nav-item active">Dashboard</a>
+            <a href="/branches" className="nav-item">Branches</a>
             <a href="#" className="nav-item">Workers</a>
             <a href="#" className="nav-item">Tasks</a>
             <a href="#" className="nav-item">Attendance</a>
@@ -72,6 +72,7 @@ function OwnerDashboard() {
             {dashboardData?.organization && (
               <p className="organization-name">{dashboardData.organization.name}</p>
             )}
+            <button onClick={() => navigate('/branches')} className="btn btn-primary">Manage Branches</button>
           </div>
 
           <div className="kpi-grid">
@@ -128,7 +129,7 @@ function OwnerDashboard() {
             <h3>Branch Performance</h3>
             <div className="branch-grid">
               {dashboardData?.branches?.map(branch => (
-                <div key={branch.id} className="branch-card">
+                <div key={branch.id} className="branch-card" onClick={() => navigate('/branches')} style={{cursor: 'pointer'}}>
                   <h4>{branch.name}</h4>
                   <p className="branch-location">{branch.location}</p>
                   <div className="branch-stats">
@@ -138,10 +139,6 @@ function OwnerDashboard() {
                 </div>
               ))}
             </div>
-          </div>
-
-          <div className="demo-notice">
-            <p>⚠️ Demo Mode: This is a prototype with sample data for demonstration purposes.</p>
           </div>
         </main>
       </div>
