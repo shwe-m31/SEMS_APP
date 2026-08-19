@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { dashboardAPI } from '../services/api';
 import './Dashboard.css';
@@ -8,16 +8,15 @@ function AdminDashboard() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
-  const [branchId, setBranchId] = useState(user?.branchId || 1);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchDashboardData();
-  }, [branchId]);
+  }, [user?.branchId]);
 
   const fetchDashboardData = async () => {
     try {
-      const response = await dashboardAPI.getAdminDashboard(branchId);
+      const response = await dashboardAPI.getAdminDashboard(user?.branchId);
       setDashboardData(response.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);
@@ -51,19 +50,19 @@ function AdminDashboard() {
       <div className="dashboard-content">
         <aside className="sidebar">
           <nav className="sidebar-nav">
-            <a href="/admin-dashboard" className="nav-item active">Dashboard</a>
-            <a href="/workers" className="nav-item">Workers</a>
-            <a href="#" className="nav-item">Tasks</a>
-            <a href="#" className="nav-item">Attendance</a>
-            <a href="#" className="nav-item">Shifts</a>
-            <a href="#" className="nav-item">Inventory</a>
-            <a href="#" className="nav-item">Billing</a>
-            <a href="#" className="nav-item">Expenses</a>
-            <a href="#" className="nav-item">Logistics</a>
-            <a href="#" className="nav-item">Sales</a>
-            <a href="/ai-insights" className="nav-item">AI Insights</a>
-            <a href="#" className="nav-item">Reports</a>
-            <a href="#" className="nav-item">Settings</a>
+            <Link to="/admin-dashboard" className="nav-item active">Dashboard</Link>
+            <Link to="/workers" className="nav-item">Workers</Link>
+            <Link to="/tasks" className="nav-item">Tasks</Link>
+            <Link to="/attendance" className="nav-item">Attendance</Link>
+            <Link to="/shifts" className="nav-item">Shifts</Link>
+            <Link to="/inventory" className="nav-item">Inventory</Link>
+            <Link to="/billing" className="nav-item">Billing</Link>
+            <Link to="/expenses" className="nav-item">Expenses</Link>
+            <Link to="/logistics" className="nav-item">Logistics</Link>
+            <Link to="/sales" className="nav-item">Sales</Link>
+            <Link to="/ai-insights" className="nav-item">AI Insights</Link>
+            <Link to="/reports" className="nav-item">Reports</Link>
+            <Link to="/settings" className="nav-item">Settings</Link>
           </nav>
         </aside>
 
@@ -125,15 +124,15 @@ function AdminDashboard() {
                 <span className="action-icon">➕</span>
                 <span>Add Worker</span>
               </button>
-              <button className="action-card">
+              <button onClick={() => navigate('/tasks')} className="action-card">
                 <span className="action-icon">📋</span>
                 <span>Create Task</span>
               </button>
-              <button className="action-card">
+              <button onClick={() => navigate('/inventory')} className="action-card">
                 <span className="action-icon">📦</span>
                 <span>Update Inventory</span>
               </button>
-              <button className="action-card">
+              <button onClick={() => navigate('/billing')} className="action-card">
                 <span className="action-icon">💳</span>
                 <span>Create Bill</span>
               </button>

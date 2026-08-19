@@ -71,8 +71,16 @@ public class BillingService {
             sales.setSaleDate(LocalDate.now());
             salesRepository.save(sales);
             
-            // Update inventory
-            if (item.getProduct() != null) {
+            // Update inventory using inventory item ID if provided
+            if (item.getInventoryId() != null) {
+                Inventory inventory = inventoryRepository.findById(item.getInventoryId()).orElse(null);
+                if (inventory != null && inventory.getBranch().getId().equals(branchId)) {
+                    inventory.setQuantity(inventory.getQuantity().subtract(item.getQuantity()));
+                    inventoryRepository.save(inventory);
+                }
+            }
+            // Fallback to name matching if no inventory ID provided
+            else if (item.getProduct() != null) {
                 List<Inventory> inventories = inventoryRepository.findByBranchId(branchId);
                 for (Inventory inv : inventories) {
                     if (inv.getName().equalsIgnoreCase(item.getProductName())) {

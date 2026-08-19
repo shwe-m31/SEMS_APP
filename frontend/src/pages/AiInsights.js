@@ -7,12 +7,16 @@ import './AiInsights.css';
 function AiInsights() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [branchId, setBranchId] = useState(1);
+  const [branchId, setBranchId] = useState(user?.branchId || 1);
   const [inventoryForecast, setInventoryForecast] = useState(null);
   const [salesPrediction, setSalesPrediction] = useState(null);
   const [productivityAnalysis, setProductivityAnalysis] = useState(null);
   const [anomalies, setAnomalies] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    setBranchId(user?.branchId || 1);
+  }, [user?.branchId]);
 
   useEffect(() => {
     fetchAllInsights();

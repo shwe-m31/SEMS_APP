@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { branchAPI } from '../services/api';
 import './Dashboard.css';
@@ -114,19 +114,20 @@ function BranchManagement() {
       <div className="dashboard-content">
         <aside className="sidebar">
           <nav className="sidebar-nav">
-            <a href="/owner-dashboard" className="nav-item">Dashboard</a>
-            <a href="/branches" className="nav-item active">Branches</a>
-            <a href="#" className="nav-item">Workers</a>
-            <a href="#" className="nav-item">Tasks</a>
-            <a href="#" className="nav-item">Attendance</a>
-            <a href="#" className="nav-item">Inventory</a>
-            <a href="#" className="nav-item">Billing</a>
-            <a href="#" className="nav-item">Expenses</a>
-            <a href="#" className="nav-item">Sales</a>
-            <a href="#" className="nav-item">Logistics</a>
-            <a href="/ai-insights" className="nav-item">AI Insights</a>
-            <a href="#" className="nav-item">Reports</a>
-            <a href="#" className="nav-item">Settings</a>
+            <Link to="/owner-dashboard" className="nav-item">Dashboard</Link>
+            <Link to="/branches" className="nav-item active">Branches</Link>
+            <Link to="/admins" className="nav-item">Admins</Link>
+            <Link to="/owner-workers" className="nav-item">Workers</Link>
+            <Link to="/tasks" className="nav-item">Tasks</Link>
+            <Link to="/attendance" className="nav-item">Attendance</Link>
+            <Link to="/inventory" className="nav-item">Inventory</Link>
+            <Link to="/billing" className="nav-item">Billing</Link>
+            <Link to="/expenses" className="nav-item">Expenses</Link>
+            <Link to="/sales" className="nav-item">Sales</Link>
+            <Link to="/logistics" className="nav-item">Logistics</Link>
+            <Link to="/ai-insights" className="nav-item">AI Insights</Link>
+            <Link to="/reports" className="nav-item">Reports</Link>
+            <Link to="/settings" className="nav-item">Settings</Link>
           </nav>
         </aside>
 

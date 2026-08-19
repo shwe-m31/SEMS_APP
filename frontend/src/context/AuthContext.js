@@ -12,7 +12,20 @@ export const AuthProvider = ({ children }) => {
     if (token) {
       authAPI.getCurrentUser()
         .then(response => {
-          setUser(response.data);
+          setUser({
+            id: response.data.id,
+            email: response.data.email,
+            name: response.data.name,
+            role: response.data.role,
+            branchId: response.data.branchId,
+            adminId: response.data.adminId,
+            workerId: response.data.workerId,
+            organizationId: response.data.organizationId,
+            branchName: response.data.branchName,
+            employeeId: response.data.employeeId,
+            designation: response.data.designation,
+            organizationName: response.data.organizationName
+          });
         })
         .catch(() => {
           localStorage.removeItem('token');
@@ -32,7 +45,11 @@ export const AuthProvider = ({ children }) => {
       id: response.data.id,
       email: response.data.email,
       name: response.data.name,
-      role: response.data.role
+      role: response.data.role,
+      branchId: response.data.branchId,
+      adminId: response.data.adminId,
+      workerId: response.data.workerId,
+      organizationId: response.data.organizationId
     });
     return response.data;
   };

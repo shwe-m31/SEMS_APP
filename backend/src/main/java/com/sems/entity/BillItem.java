@@ -25,6 +25,9 @@ public class BillItem {
     @JoinColumn(name = "product_id")
     private Product product;
 
+    @Column(name = "inventory_id")
+    private Long inventoryId;
+
     @Column(nullable = false)
     private String productName;
 

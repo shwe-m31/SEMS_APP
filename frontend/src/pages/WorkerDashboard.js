@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { dashboardAPI, attendanceAPI } from '../services/api';
 import './Dashboard.css';
@@ -125,15 +125,15 @@ function WorkerDashboard() {
                 <span className="action-icon">✅</span>
                 <span>{markingAttendance ? 'Marking...' : 'Mark Attendance'}</span>
               </button>
-              <button className="action-card">
+              <button className="action-card" onClick={() => navigate('/tasks')}>
                 <span className="action-icon">📋</span>
                 <span>View Tasks</span>
               </button>
-              <button className="action-card">
+              <button className="action-card" onClick={() => navigate('/shifts')}>
                 <span className="action-icon">📅</span>
                 <span>View Schedule</span>
               </button>
-              <button className="action-card">
+              <button className="action-card" onClick={() => navigate('/notifications')}>
                 <span className="action-icon">🔔</span>
                 <span>Notifications</span>
               </button>
