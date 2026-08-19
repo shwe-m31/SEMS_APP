@@ -10,7 +10,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  background-color: #EAEAF5;
 }
 
 code {
@@ -19,17 +19,25 @@ code {
 }
 
 :root {
-  --primary-color: #2563eb;
-  --secondary-color: #1e40af;
-  --success-color: #10b981;
-  --warning-color: #f59e0b;
-  --danger-color: #ef4444;
-  --info-color: #3b82f6;
-  --light-color: #f3f4f6;
-  --dark-color: #1f2937;
-  --gray-color: #6b7280;
-  --border-color: #e5e7eb;
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  --primary-color: #7B61FF;
+  --secondary-color: #5B8DEF;
+  --success-color: #36D7B7;
+  --warning-color: #FFB347;
+  --danger-color: #FF6B7A;
+  --info-color: #5B8DEF;
+  --light-color: #EAEAF5;
+  --dark-color: #2D2D60;
+  --gray-color: #9999BB;
+  --border-color: #D8D8EE;
+  --card-bg: #FFFFFF;
+  --sidebar-bg: #FFFFFF;
+  --header-bg: #FFFFFF;
+  --page-bg: #EAEAF5;
+  --accent-gradient: linear-gradient(135deg, #7B61FF 0%, #5B8DEF 100%);
+  --hero-gradient: linear-gradient(135deg, #7B61FF 0%, #9B6BFF 50%, #5B8DEF 100%);
+  --shadow-sm: 0 2px 8px rgba(123, 97, 255, 0.08);
+  --shadow-md: 0 6px 20px rgba(123, 97, 255, 0.12);
+  --shadow-lg: 0 12px 35px rgba(123, 97, 255, 0.18);
+  --border-radius: 12px;
+  --border-radius-lg: 16px;
 }
