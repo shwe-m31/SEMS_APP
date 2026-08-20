@@ -1,6 +1,6 @@
 .ai-insights {
   min-height: 100vh;
-  background: var(--page-bg);
+  background: transparent;
 }
 
 .ai-content {
@@ -12,7 +12,7 @@
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  background: var(--page-bg);
+  background: transparent;
 }
 
 .dashboard-header h2 {
@@ -37,11 +37,13 @@
 
 .ai-card {
   background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-radius: var(--border-radius-lg);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
 }
 
 .ai-card:hover {
@@ -59,14 +61,21 @@
 }
 
 .ai-icon {
-  font-size: 2.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
   width: 52px;
   height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: 12px;
+  border: 1px solid var(--glass-border);
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .ai-card-header h3 {
@@ -128,9 +137,12 @@
 .recommendation {
   margin-top: 1.25rem;
   padding: 1rem 1.1rem;
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: 10px;
   border-left: 4px solid var(--primary-color);
+  border: 1px solid var(--glass-border);
 }
 
 .recommendation strong {
@@ -241,7 +253,9 @@
 }
 
 .demo-notice {
-  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CD 100%);
+  background: rgba(255, 249, 230, 0.4);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--warning-color);
   padding: 1.25rem 1.5rem;
   border-radius: var(--border-radius);

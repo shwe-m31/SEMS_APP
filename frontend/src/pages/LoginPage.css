@@ -4,17 +4,20 @@
   justify-content: center;
   align-items: center;
   background: var(--hero-gradient);
+  background-attachment: fixed;
   padding: 1rem;
 }
 
 .login-container {
-  background: white;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 3rem;
   border-radius: 20px;
-  box-shadow: 0 20px 60px rgba(45, 45, 96, 0.25);
+  box-shadow: var(--glass-shadow);
   max-width: 440px;
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--glass-border);
 }
 
 .login-header {
@@ -39,13 +42,15 @@
 }
 
 .error-message {
-  background: rgba(255, 107, 122, 0.1);
+  background: rgba(255, 107, 122, 0.15);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: #D94055;
   padding: 0.75rem 1rem;
   border-radius: 8px;
   margin-bottom: 1.5rem;
   text-align: center;
-  border: 1px solid rgba(255, 107, 122, 0.25);
+  border: 1px solid rgba(255, 107, 122, 0.3);
   font-size: 0.9rem;
   font-weight: 500;
 }
@@ -69,19 +74,21 @@
 .form-group input {
   width: 100%;
   padding: 0.75rem 0.95rem;
-  border: 1.5px solid var(--border-color);
+  border: 1.5px solid var(--glass-border);
   border-radius: 9px;
   font-size: 0.95rem;
   transition: border-color 0.2s, box-shadow 0.2s;
   color: var(--dark-color);
-  background: #FAFAFF;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
 }
 
 .form-group input:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.15);
-  background: white;
+  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.25);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .form-group input::placeholder {
@@ -103,8 +110,11 @@
 
 .btn-primary {
   background: var(--accent-gradient);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: white;
   box-shadow: 0 4px 15px rgba(123, 97, 255, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-primary:hover {
@@ -138,10 +148,12 @@
 .demo-credentials {
   margin-top: 1.75rem;
   padding: 1rem 1.25rem;
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: 10px;
   font-size: 0.85rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
 }
 
 .demo-credentials h3 {

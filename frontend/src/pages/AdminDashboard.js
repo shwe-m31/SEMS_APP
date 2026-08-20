@@ -77,7 +77,7 @@ function AdminDashboard() {
 
           <div className="kpi-grid">
             <div className="kpi-card">
-              <div className="kpi-icon">👷</div>
+              <div className="kpi-icon">WR</div>
               <div className="kpi-content">
                 <h3>Workers</h3>
                 <p className="kpi-value">{dashboardData?.workerCount || 0}</p>
@@ -85,7 +85,7 @@ function AdminDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">✅</div>
+              <div className="kpi-icon">AT</div>
               <div className="kpi-content">
                 <h3>Attendance Today</h3>
                 <p className="kpi-value">{dashboardData?.attendanceToday || 0}</p>
@@ -93,7 +93,7 @@ function AdminDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">📋</div>
+              <div className="kpi-icon">TS</div>
               <div className="kpi-content">
                 <h3>Pending Tasks</h3>
                 <p className="kpi-value">{dashboardData?.pendingTasks || 0}</p>
@@ -101,7 +101,7 @@ function AdminDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">📦</div>
+              <div className="kpi-icon">IN</div>
               <div className="kpi-content">
                 <h3>Current Stock</h3>
                 <p className="kpi-value">{dashboardData?.currentStock || 0}</p>
@@ -109,7 +109,7 @@ function AdminDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">💰</div>
+              <div className="kpi-icon">SL</div>
               <div className="kpi-content">
                 <h3>Today's Sales</h3>
                 <p className="kpi-value">₹{dashboardData?.todaySales || 0}</p>
@@ -121,19 +121,19 @@ function AdminDashboard() {
             <h3>Quick Actions</h3>
             <div className="action-grid">
               <button onClick={() => navigate('/workers')} className="action-card">
-                <span className="action-icon">➕</span>
+                <span className="action-icon">ADD</span>
                 <span>Add Worker</span>
               </button>
               <button onClick={() => navigate('/tasks')} className="action-card">
-                <span className="action-icon">📋</span>
+                <span className="action-icon">NEW</span>
                 <span>Create Task</span>
               </button>
               <button onClick={() => navigate('/inventory')} className="action-card">
-                <span className="action-icon">📦</span>
+                <span className="action-icon">UPD</span>
                 <span>Update Inventory</span>
               </button>
               <button onClick={() => navigate('/billing')} className="action-card">
-                <span className="action-icon">💳</span>
+                <span className="action-icon">BILL</span>
                 <span>Create Bill</span>
               </button>
             </div>

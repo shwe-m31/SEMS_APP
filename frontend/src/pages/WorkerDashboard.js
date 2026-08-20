@@ -79,7 +79,7 @@ function WorkerDashboard() {
 
           <div className="kpi-grid">
             <div className="kpi-card">
-              <div className="kpi-icon">📋</div>
+              <div className="kpi-icon">AS</div>
               <div className="kpi-content">
                 <h3>Assigned Tasks</h3>
                 <p className="kpi-value">{dashboardData?.assignedTasks || 0}</p>
@@ -87,7 +87,7 @@ function WorkerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">⏳</div>
+              <div className="kpi-icon">PT</div>
               <div className="kpi-content">
                 <h3>Pending Tasks</h3>
                 <p className="kpi-value">{dashboardData?.pendingTasks || 0}</p>
@@ -95,7 +95,7 @@ function WorkerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">✅</div>
+              <div className="kpi-icon">CT</div>
               <div className="kpi-content">
                 <h3>Completed Tasks</h3>
                 <p className="kpi-value">{dashboardData?.completedTasks || 0}</p>
@@ -103,7 +103,7 @@ function WorkerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">📅</div>
+              <div className="kpi-icon">AS</div>
               <div className="kpi-content">
                 <h3>Attendance Status</h3>
                 <p className="kpi-value">
@@ -122,19 +122,19 @@ function WorkerDashboard() {
                 onClick={handleMarkAttendance}
                 disabled={markingAttendance || dashboardData?.todayAttendance}
               >
-                <span className="action-icon">✅</span>
+                <span className="action-icon">MARK</span>
                 <span>{markingAttendance ? 'Marking...' : 'Mark Attendance'}</span>
               </button>
               <button className="action-card" onClick={() => navigate('/tasks')}>
-                <span className="action-icon">📋</span>
+                <span className="action-icon">VIEW</span>
                 <span>View Tasks</span>
               </button>
               <button className="action-card" onClick={() => navigate('/shifts')}>
-                <span className="action-icon">📅</span>
+                <span className="action-icon">SCH</span>
                 <span>View Schedule</span>
               </button>
               <button className="action-card" onClick={() => navigate('/notifications')}>
-                <span className="action-icon">🔔</span>
+                <span className="action-icon">NOT</span>
                 <span>Notifications</span>
               </button>
             </div>
@@ -161,7 +161,7 @@ function WorkerDashboard() {
           </div>
 
           <div className="demo-notice">
-            <p>⚠️ Demo Mode: This is a prototype with sample data for demonstration purposes.</p>
+            <p>Demo Mode: This is a prototype with sample data for demonstration purposes.</p>
           </div>
         </main>
       </div>

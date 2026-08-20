@@ -3,7 +3,7 @@
 =========================== */
 .dashboard {
   min-height: 100vh;
-  background: var(--page-bg);
+  background: transparent;
 }
 
 .loading {
@@ -21,12 +21,14 @@
 =========================== */
 .dashboard-header {
   background: var(--header-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 0.85rem 2rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: var(--shadow-sm);
-  border-bottom: 1px solid var(--border-color);
+  box-shadow: var(--glass-shadow);
+  border-bottom: 1px solid var(--glass-border);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -87,10 +89,12 @@
 .sidebar {
   width: 240px;
   background: var(--sidebar-bg);
-  box-shadow: 2px 0 12px rgba(123, 97, 255, 0.07);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow);
   padding: 1.5rem 0;
   flex-shrink: 0;
-  border-right: 1px solid var(--border-color);
+  border-right: 1px solid var(--glass-border);
 }
 
 .sidebar-nav {
@@ -133,7 +137,7 @@
   flex: 1;
   padding: 2rem;
   overflow-y: auto;
-  background: var(--page-bg);
+  background: transparent;
 }
 
 .worker-main {
@@ -173,14 +177,16 @@
 
 .kpi-card {
   background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 1.4rem 1.5rem;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow);
   display: flex;
   align-items: center;
   gap: 1rem;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
   position: relative;
   overflow: hidden;
 }
@@ -198,18 +204,26 @@
 .kpi-card:hover {
   transform: translateY(-4px);
   box-shadow: var(--shadow-md);
+  background: rgba(255, 255, 255, 0.35);
 }
 
 .kpi-icon {
-  font-size: 2.2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
   width: 56px;
   height: 56px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   border-radius: 12px;
   flex-shrink: 0;
+  border: 1px solid var(--glass-border);
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .kpi-content h3 {
@@ -233,11 +247,13 @@
 =========================== */
 .section {
   background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 1.5rem;
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow);
   margin-bottom: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
 }
 
 .section h3 {
@@ -259,11 +275,14 @@
 }
 
 .branch-card {
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 1.4rem;
   border-radius: var(--border-radius);
   border-left: 4px solid var(--primary-color);
   transition: box-shadow 0.2s;
+  border: 1px solid var(--glass-border);
 }
 
 .branch-card:hover {
@@ -300,8 +319,10 @@
 }
 
 .action-card {
-  background: var(--card-bg);
-  border: 2px solid var(--border-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 2px solid var(--glass-border);
   border-radius: var(--border-radius);
   padding: 1.4rem 1rem;
   display: flex;
@@ -318,9 +339,9 @@
 
 .action-card:hover {
   border-color: var(--primary-color);
-  background: var(--light-color);
+  background: rgba(255, 255, 255, 0.4);
   transform: translateY(-3px);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow);
   color: var(--primary-color);
 }
 
@@ -330,16 +351,23 @@
 }
 
 .action-icon {
-  font-size: 2rem;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 /* ===========================
    STATUS CARD
 =========================== */
 .status-card {
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 1.25rem;
   border-radius: var(--border-radius);
+  border: 1px solid var(--glass-border);
 }
 
 .status-item {
@@ -378,7 +406,9 @@
    DEMO NOTICE
 =========================== */
 .demo-notice {
-  background: linear-gradient(135deg, #FFF9E6 0%, #FFF3CD 100%);
+  background: rgba(255, 249, 230, 0.4);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--warning-color);
   padding: 1rem 1.25rem;
   border-radius: var(--border-radius);
@@ -415,7 +445,10 @@
 .btn-primary {
   background: var(--accent-gradient);
   color: white;
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   box-shadow: 0 4px 12px rgba(123, 97, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-primary:hover {
@@ -423,9 +456,11 @@
 }
 
 .btn-secondary {
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: var(--dark-color);
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
 }
 
 .btn-secondary:hover {
@@ -434,8 +469,11 @@
 
 .btn-danger {
   background: linear-gradient(135deg, #FF6B7A, #FF4757);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: white;
   box-shadow: 0 4px 12px rgba(255, 107, 122, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-danger:hover {
@@ -444,14 +482,20 @@
 
 .btn-success {
   background: linear-gradient(135deg, #36D7B7, #00BFA5);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: white;
   box-shadow: 0 4px 12px rgba(54, 215, 183, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-warning {
   background: linear-gradient(135deg, #FFB347, #FF8C00);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   color: white;
   box-shadow: 0 4px 12px rgba(255, 179, 71, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .btn-sm {
@@ -471,11 +515,13 @@
 =========================== */
 .table-container {
   background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-radius: var(--border-radius);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--glass-shadow);
   overflow: hidden;
   margin-bottom: 1.5rem;
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--glass-border);
 }
 
 .data-table {
@@ -484,7 +530,9 @@
 }
 
 .data-table thead {
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
 }
 
 .data-table th {
@@ -510,7 +558,7 @@
 }
 
 .data-table tbody tr:hover {
-  background: var(--light-color);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .data-table tbody tr:last-child td {
@@ -526,8 +574,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(45, 45, 96, 0.45);
-  backdrop-filter: blur(4px);
+  background: rgba(45, 45, 96, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -536,12 +585,14 @@
 
 .modal-content {
   background: var(--card-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   padding: 2rem;
   border-radius: var(--border-radius-lg);
   width: 100%;
   max-width: 520px;
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--border-color);
+  box-shadow: var(--glass-shadow);
+  border: 1px solid var(--glass-border);
   animation: modalIn 0.22s ease;
 }
 
@@ -606,12 +657,14 @@
 .form-group select {
   width: 100%;
   padding: 0.7rem 0.9rem;
-  border: 1.5px solid var(--border-color);
+  border: 1.5px solid var(--glass-border);
   border-radius: 8px;
   font-size: 0.95rem;
   font-family: inherit;
   color: var(--dark-color);
-  background: var(--card-bg);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   transition: border-color 0.2s, box-shadow 0.2s;
   appearance: none;
   -webkit-appearance: none;
@@ -629,7 +682,8 @@
 .form-group select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.15);
+  box-shadow: 0 0 0 3px rgba(123, 97, 255, 0.25);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .form-group input::placeholder,
@@ -692,11 +746,13 @@
 .filter-row input,
 .filter-row select {
   padding: 0.55rem 0.9rem;
-  border: 1.5px solid var(--border-color);
+  border: 1.5px solid var(--glass-border);
   border-radius: 8px;
   font-size: 0.9rem;
   color: var(--dark-color);
-  background: var(--card-bg);
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
   transition: border-color 0.2s;
   appearance: none;
   -webkit-appearance: none;
@@ -1111,7 +1167,9 @@
 }
 
 .data-table thead {
-  background: var(--light-color);
+  background: var(--glass-gradient);
+  backdrop-filter: var(--glass-blur-sm);
+  -webkit-backdrop-filter: var(--glass-blur-sm);
 }
 
 .data-table th {
@@ -1128,7 +1186,7 @@
 }
 
 .data-table tbody tr:hover {
-  background: var(--light-color);
+  background: rgba(255, 255, 255, 0.15);
 }
 
 .data-table tbody tr:last-child td {

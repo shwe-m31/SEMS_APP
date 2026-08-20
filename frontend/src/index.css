@@ -10,7 +10,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #EAEAF5;
+  background: var(--page-bg);
+  background-attachment: fixed;
+  min-height: 100vh;
 }
 
 code {
@@ -19,25 +21,43 @@ code {
 }
 
 :root {
+  /* Glassmorphism Color Palette */
   --primary-color: #7B61FF;
   --secondary-color: #5B8DEF;
   --success-color: #36D7B7;
   --warning-color: #FFB347;
   --danger-color: #FF6B7A;
   --info-color: #5B8DEF;
-  --light-color: #EAEAF5;
+  --light-color: rgba(234, 234, 245, 0.6);
   --dark-color: #2D2D60;
   --gray-color: #9999BB;
-  --border-color: #D8D8EE;
-  --card-bg: #FFFFFF;
-  --sidebar-bg: #FFFFFF;
-  --header-bg: #FFFFFF;
-  --page-bg: #EAEAF5;
+  --border-color: rgba(216, 216, 238, 0.4);
+  
+  /* Glassmorphism Backgrounds */
+  --card-bg: rgba(255, 255, 255, 0.25);
+  --sidebar-bg: rgba(255, 255, 255, 0.35);
+  --header-bg: rgba(255, 255, 255, 0.4);
+  --page-bg: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  
+  /* Glassmorphism Effects */
+  --glass-bg: rgba(255, 255, 255, 0.15);
+  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  --glass-blur: blur(12px);
+  --glass-blur-sm: blur(8px);
+  
+  /* Gradients */
   --accent-gradient: linear-gradient(135deg, #7B61FF 0%, #5B8DEF 100%);
-  --hero-gradient: linear-gradient(135deg, #7B61FF 0%, #9B6BFF 50%, #5B8DEF 100%);
-  --shadow-sm: 0 2px 8px rgba(123, 97, 255, 0.08);
-  --shadow-md: 0 6px 20px rgba(123, 97, 255, 0.12);
-  --shadow-lg: 0 12px 35px rgba(123, 97, 255, 0.18);
-  --border-radius: 12px;
-  --border-radius-lg: 16px;
+  --hero-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  --glass-gradient: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 100%);
+  
+  /* Shadows */
+  --shadow-sm: 0 4px 16px rgba(31, 38, 135, 0.1);
+  --shadow-md: 0 8px 24px rgba(31, 38, 135, 0.15);
+  --shadow-lg: 0 16px 48px rgba(31, 38, 135, 0.2);
+  
+  /* Border Radius */
+  --border-radius: 16px;
+  --border-radius-lg: 24px;
+  --border-radius-sm: 12px;
 }

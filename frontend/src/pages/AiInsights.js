@@ -83,7 +83,7 @@ function AiInsights() {
             {/* Inventory Demand Forecasting */}
             <div className="ai-card inventory-forecast">
               <div className="ai-card-header">
-                <div className="ai-icon">📦</div>
+                <div className="ai-icon">INV</div>
                 <h3>Inventory Demand Forecasting</h3>
               </div>
               <div className="ai-card-body">
@@ -121,7 +121,7 @@ function AiInsights() {
             {/* Sales Trend Prediction */}
             <div className="ai-card sales-prediction">
               <div className="ai-card-header">
-                <div className="ai-icon">📈</div>
+                <div className="ai-icon">ST</div>
                 <h3>Sales Trend Prediction</h3>
               </div>
               <div className="ai-card-body">
@@ -161,7 +161,7 @@ function AiInsights() {
             {/* Worker Productivity Insights */}
             <div className="ai-card productivity-insights">
               <div className="ai-card-header">
-                <div className="ai-icon">👷</div>
+                <div className="ai-icon">WP</div>
                 <h3>Worker Productivity Insights</h3>
               </div>
               <div className="ai-card-body">
@@ -195,7 +195,7 @@ function AiInsights() {
             {/* Anomaly Detection */}
             <div className="ai-card anomaly-detection">
               <div className="ai-card-header">
-                <div className="ai-icon">🚨</div>
+                <div className="ai-icon">AD</div>
                 <h3>Anomaly Detection</h3>
               </div>
               <div className="ai-card-body">
@@ -239,9 +239,9 @@ function AiInsights() {
           </div>
 
           <div className="demo-notice">
-            <p>⚠️ <strong>Prototype Mode:</strong> These AI predictions are generated using demo/sample data for demonstration purposes. 
+            <p><strong>Prototype Mode:</strong> These AI predictions are generated using demo/sample data for demonstration purposes. 
             The confidence levels and predictions are simulated and not based on actual machine learning models.</p>
-            <p>📊 The AI features include: Inventory Demand Forecasting, Sales Trend Prediction, Worker Productivity Insights, and Anomaly Detection.</p>
+            <p>The AI features include: Inventory Demand Forecasting, Sales Trend Prediction, Worker Productivity Insights, and Anomaly Detection.</p>
           </div>
         </main>
       </div>
