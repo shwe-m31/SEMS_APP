@@ -78,7 +78,6 @@ function OwnerDashboard() {
 
           <div className="kpi-grid">
             <div className="kpi-card">
-              <div className="kpi-icon">BR</div>
               <div className="kpi-content">
                 <h3>Total Branches</h3>
                 <p className="kpi-value">{dashboardData?.totalBranches || 0}</p>
@@ -86,7 +85,6 @@ function OwnerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">WR</div>
               <div className="kpi-content">
                 <h3>Total Workers</h3>
                 <p className="kpi-value">{dashboardData?.totalWorkers || 0}</p>
@@ -94,7 +92,6 @@ function OwnerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">SL</div>
               <div className="kpi-content">
                 <h3>Today's Sales</h3>
                 <p className="kpi-value">₹{dashboardData?.todaySales || 0}</p>
@@ -102,7 +99,6 @@ function OwnerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">IN</div>
               <div className="kpi-content">
                 <h3>Total Inventory</h3>
                 <p className="kpi-value">{dashboardData?.totalInventory || 0}</p>
@@ -110,7 +106,6 @@ function OwnerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">TS</div>
               <div className="kpi-content">
                 <h3>Pending Tasks</h3>
                 <p className="kpi-value">{dashboardData?.pendingTasks || 0}</p>
@@ -118,7 +113,6 @@ function OwnerDashboard() {
             </div>
 
             <div className="kpi-card">
-              <div className="kpi-icon">AT</div>
               <div className="kpi-content">
                 <h3>Attendance Today</h3>
                 <p className="kpi-value">{dashboardData?.attendanceToday || 0}</p>

@@ -37,62 +37,32 @@ function LandingPage() {
             <Link to="/login" className="btn btn-secondary">Login</Link>
           </div>
         </div>
-
-        <div className="hero-illustration">
-          <div className="hierarchy-diagram">
-            <div className="hierarchy-level">
-              <div className="hierarchy-node owner">OWNER</div>
-            </div>
-            <div className="hierarchy-arrow">↓</div>
-            <div className="hierarchy-level">
-              <div className="hierarchy-node branches">MULTIPLE BRANCHES / BUSINESS UNITS</div>
-            </div>
-            <div className="hierarchy-arrow">↓</div>
-            <div className="hierarchy-level">
-              <div className="hierarchy-node admins">ADMINS</div>
-            </div>
-            <div className="hierarchy-arrow">↓</div>
-            <div className="hierarchy-level">
-              <div className="hierarchy-node workers">WORKERS</div>
-            </div>
-            <div className="hierarchy-arrow">↓</div>
-            <div className="hierarchy-level">
-              <div className="hierarchy-node centralized">CENTRALIZED MANAGEMENT</div>
-            </div>
-          </div>
-        </div>
       </section>
 
       <section id="features" className="features-section">
         <h2 className="section-title">Key Features</h2>
         <div className="features-grid">
           <div className="feature-card">
-            <div className="feature-icon">MBM</div>
             <h3>Multi-Branch Management</h3>
             <p>Manage multiple branches and business units from a single centralized platform</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">WFM</div>
             <h3>Workforce Management</h3>
             <p>Track workers, attendance, shifts, and task allocation efficiently</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">INV</div>
             <h3>Inventory Control</h3>
             <p>Monitor stock levels, get low-stock alerts, and manage supplies</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">BIL</div>
             <h3>Billing & Sales</h3>
             <p>Generate bills, track sales, and manage revenue streams</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">AI</div>
             <h3>AI-Powered Insights</h3>
             <p>Get predictions for sales trends, inventory demand, and productivity insights</p>
           </div>
           <div className="feature-card">
-            <div className="feature-icon">NOT</div>
             <h3>Smart Notifications</h3>
             <p>Receive alerts for low stock, task deadlines, and anomalies</p>
           </div>
