@@ -8,78 +8,90 @@ function LandingPage() {
       <header className="landing-header">
         <div className="logo">SEMS</div>
         <nav className="landing-nav">
-          <Link to="/">Home</Link>
-          <Link to="#features">Features</Link>
-          <Link to="#about">About</Link>
-          <Link to="#contact">Contact</Link>
+          <a href="#home">Home</a>
+          <a href="#features">Features</a>
+          <a href="#about">About</a>
           <Link to="/login" className="login-btn">Login</Link>
         </nav>
       </header>
 
-      <section className="hero-section">
-        <div className="hero-content">
-          <h1 className="hero-title">Smart Enterprise Management System</h1>
-          <p className="hero-subtitle">
-            Manage branches, workers, inventory, billing and business operations from one centralized platform.
-          </p>
-          
-          <div className="industry-tags">
-            <span className="tag">Retail</span>
-            <span className="tag">Food Service</span>
-            <span className="tag">Textile</span>
-            <span className="tag">Manufacturing</span>
-            <span className="tag">Logistics</span>
-            <span className="tag">MSMEs</span>
+      <section id="home" className="hero-section">
+        <div className="hero-layout">
+          <div className="hero-content">
+            <span className="hero-eyebrow">Enterprise operations platform</span>
+            <h1 className="hero-title">Run branches, workforce, inventory and billing from one professional workspace.</h1>
+            <p className="hero-subtitle">
+              SEMS helps owners, administrators and workers stay aligned with structured workflows, clean reporting and better day-to-day visibility across every business unit.
+            </p>
+
+            <div className="hero-buttons">
+              <Link to="/register" className="btn btn-primary">Create New Account</Link>
+              <Link to="/login" className="btn btn-secondary">Login</Link>
+            </div>
           </div>
 
-          <div className="hero-buttons">
-            <Link to="/register" className="btn btn-primary">Create New Account</Link>
-            <Link to="/login" className="btn btn-secondary">Login</Link>
+          <div className="hero-panel">
+            <div className="hero-summary-card">
+              <h3>Centralized oversight</h3>
+              <p>Track branch activity, people, stock levels and financial operations from a single decision-making view.</p>
+            </div>
+            <div className="hero-summary-card">
+              <h3>Operational clarity</h3>
+              <p>Give each role a clear workspace with focused actions, measurable data and a simpler workflow.</p>
+            </div>
+            <div className="hero-summary-card">
+              <h3>Scalable workflow</h3>
+              <p>Move from single-unit management to multi-branch coordination without changing how teams work.</p>
+            </div>
           </div>
         </div>
       </section>
 
       <section id="features" className="features-section">
-        <h2 className="section-title">Key Features</h2>
+        <div className="section-heading">
+          <h2 className="section-title">Key Features</h2>
+          <p className="section-subtitle">Built for structured growth, daily execution and cleaner oversight.</p>
+        </div>
         <div className="features-grid">
           <div className="feature-card">
             <h3>Multi-Branch Management</h3>
-            <p>Manage multiple branches and business units from a single centralized platform</p>
+            <p>Coordinate multiple locations with consistent controls, visibility and accountability.</p>
           </div>
           <div className="feature-card">
             <h3>Workforce Management</h3>
-            <p>Track workers, attendance, shifts, and task allocation efficiently</p>
+            <p>Manage attendance, shift planning and task ownership with less manual follow-up.</p>
           </div>
           <div className="feature-card">
             <h3>Inventory Control</h3>
-            <p>Monitor stock levels, get low-stock alerts, and manage supplies</p>
+            <p>Monitor stock movement, maintain supply continuity and respond to shortages earlier.</p>
           </div>
           <div className="feature-card">
             <h3>Billing & Sales</h3>
-            <p>Generate bills, track sales, and manage revenue streams</p>
+            <p>Create bills, review sales performance and maintain a cleaner operational record.</p>
           </div>
           <div className="feature-card">
             <h3>AI-Powered Insights</h3>
-            <p>Get predictions for sales trends, inventory demand, and productivity insights</p>
+            <p>Review forecasts and pattern-based signals that support faster planning and response.</p>
           </div>
           <div className="feature-card">
             <h3>Smart Notifications</h3>
-            <p>Receive alerts for low stock, task deadlines, and anomalies</p>
+            <p>Stay informed about exceptions, deadlines and branch-level operational changes.</p>
           </div>
         </div>
       </section>
 
       <section id="about" className="about-section">
-        <h2 className="section-title">About SEMS</h2>
-        <p className="about-text">
-          SEMS is designed for MSMEs and multi-unit businesses that need to manage operations across multiple locations. 
-          Whether you run a retail chain, manufacturing units, textile production, or distribution centers, 
-          SEMS provides the tools you need to centralize your operations and make data-driven decisions.
-        </p>
+        <div className="about-card">
+          <h2 className="section-title">About SEMS</h2>
+          <p className="about-text">
+            SEMS is designed for growing businesses that need a more disciplined way to manage operations across branches, teams and business functions.
+            Whether the environment is retail, manufacturing, textile production or distribution, the platform is structured to reduce fragmentation and support more informed decisions.
+          </p>
+        </div>
       </section>
 
       <footer className="landing-footer">
-        <p>&copy; 2024 Smart Enterprise Management System. All rights reserved.</p>
+        <p>Smart Enterprise Management System</p>
       </footer>
     </div>
   );

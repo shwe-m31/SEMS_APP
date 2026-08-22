@@ -228,8 +228,8 @@ function RegisterPage() {
 
               {formData.hasBranches && (
                 <div className="roles-info">
-                  <p>✓ You can create Admin/Incharge accounts for branch management</p>
-                  <p>✓ You can create Worker accounts through your management system</p>
+                  <p>Branch management accounts can be created later for each operating unit.</p>
+                  <p>Worker accounts can also be added from the management workspace after setup.</p>
                 </div>
               )}
             </>
