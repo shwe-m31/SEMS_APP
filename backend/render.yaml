@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: sems-backend
+    env: java
+    plan: free
+    buildCommand: mvn clean package -DskipTests
+    startCommand: java -jar target/sems-backend-1.0.0.jar
+    envVars:
+      - key: PORT
+        value: 8080
+      - key: DATABASE_URL
+        value: jdbc:mysql://mysql-2d367cc8-shwetham3101-project.a.aivencloud.com:15508/SEMS_APP_DATABASE?useSSL=true&requireSSL=true&serverTimezone=UTC
+      - key: DATABASE_USERNAME
+        value: avnadmin
+      - key: DATABASE_PASSWORD
+        value: [your-aiven-database-password]
+      - key: JWT_SECRET
+        generateValue: true
+        length: 64
+      - key: CORS_ALLOWED_ORIGINS
+        value: https://sems-frontend.onrender.com,https://sems-frontend.onrender.com/

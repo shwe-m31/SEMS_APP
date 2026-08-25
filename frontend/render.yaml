@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: sems-frontend
+    env: static
+    plan: free
+    buildCommand: npm run build
+    staticPublishPath: build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://sems-backend.onrender.com
