@@ -102,13 +102,15 @@ function OwnerWorkers() {
           </div>
 
           <div className="filter-section">
-            <label>Filter by Branch:</label>
-            <select value={selectedBranch} onChange={handleBranchFilter}>
-              <option value="">All Branches</option>
-              {branches.map(branch => (
-                <option key={branch.id} value={branch.id}>{branch.name}</option>
-              ))}
-            </select>
+            <div className="filter-group">
+              <label>Filter by Branch:</label>
+              <select value={selectedBranch} onChange={handleBranchFilter}>
+                <option value="">All Branches</option>
+                {branches.map(branch => (
+                  <option key={branch.id} value={branch.id}>{branch.name}</option>
+                ))}
+              </select>
+            </div>
           </div>
 
           <div className="table-container">
