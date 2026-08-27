@@ -47,7 +47,30 @@ The backend is already configured with:
 
 ### 2.2 Deploy to Render
 
-**Option A: Using Render Dashboard (Recommended for first deployment)**
+**Option A: Using Render Blueprint (Recommended)**
+
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click "New +" → "Blueprint"
+3. Connect your GitHub repository: `shwe-m31/SEMS_APP`
+4. Keep the default settings:
+   - **Branch**: main
+   - **Blueprint Path**: render.yaml
+5. Click "Apply Blueprint"
+
+**Important: Manual Setup Required After Blueprint Deployment**
+
+After the Blueprint creates the services, you MUST manually set the database password:
+
+1. Go to your `sems-backend` service in Render Dashboard
+2. Navigate to "Environment" section
+3. Add the `DATABASE_PASSWORD` environment variable:
+   ```
+   DATABASE_PASSWORD: [your-aiven-database-password]
+   ```
+4. Click "Save Changes"
+5. Render will automatically redeploy the backend service
+
+**Option B: Using Render Dashboard (Manual Deployment)**
 
 1. Go to [Render Dashboard](https://dashboard.render.com/)
 2. Click "New +" button
@@ -63,7 +86,7 @@ The backend is already configured with:
 6. Add Environment Variables:
    ```
    PORT: 8080
-   DATABASE_URL: jdbc:mysql://mysql-2d367cc8-shwetham3101-project.a.aivencloud.com:15508/SEMS_APP_DATABASE?useSSL=true&requireSSL=true&serverTimezone=UTC
+   DATABASE_URL: jdbc:mysql://mysql-2d367cc8-shwetham3101-project.a.aivencloud.com:15508/SEMS_APP_DATABASE?useSSL=true&requireSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC
    DATABASE_USERNAME: avnadmin
    DATABASE_PASSWORD: [your-aiven-database-password]
    JWT_SECRET: [generate a secure 64-character secret]
@@ -80,13 +103,26 @@ The backend is already configured with:
 4. Connect your repository
 5. Render will automatically detect `render.yaml` and deploy both services
 
-### 2.3 Verify Backend Deployment
+### 2.3 Set Database Password (Required for Blueprint Deployment)
+
+If you used the Blueprint deployment method, you MUST set the database password manually:
+
+1. Go to Render Dashboard → sems-backend service
+2. Click on "Environment" tab
+3. Click "Add Environment Variable"
+4. Add:
+   - **Key**: `DATABASE_PASSWORD`
+   - **Value**: [your-aiven-database-password]
+5. Click "Save Changes"
+6. Render will automatically redeploy the backend service
+
+### 2.4 Verify Backend Deployment
 
 - Check the Render dashboard for deployment status
 - Once deployed, you'll get a URL like: `https://sems-backend.onrender.com`
 - Test the API: `https://sems-backend.onrender.com/api/auth/login`
 
-## Step 3: Frontend Deployment (Render)
+## Step 4: Frontend Deployment (Render)
 
 ### 3.1 Prepare Frontend Code
 
@@ -95,7 +131,7 @@ The frontend is already configured with:
 - Updated API service to use environment variables
 - `render.yaml` configuration
 
-### 3.2 Deploy to Render
+### 3.3 Deploy to Render
 
 **Option A: Using Render Dashboard**
 
@@ -121,13 +157,13 @@ The frontend is already configured with:
 
 If using the blueprint approach, the frontend will be deployed automatically along with the backend.
 
-### 3.3 Verify Frontend Deployment
+### 3.4 Verify Frontend Deployment
 
 - Check the Render dashboard for deployment status
 - Once deployed, you'll get a URL like: `https://sems-frontend.onrender.com`
 - Visit the URL to verify the landing page loads correctly
 
-## Step 4: Post-Deployment Configuration
+## Step 5: Post-Deployment Configuration
 
 ### 4.1 Update CORS Settings
 
@@ -146,7 +182,7 @@ After both services are deployed, update the backend CORS settings to include th
 4. Navigate through the dashboard
 5. Test various functionalities
 
-## Step 5: Database Migration (Optional)
+## Step 6: Database Migration (Optional)
 
 If you have existing SQL scripts to run:
 
@@ -162,7 +198,7 @@ If you have existing SQL scripts to run:
 
 The Spring Boot application is configured with `spring.jpa.hibernate.ddl-auto=update`, so it will automatically create/update the database schema based on your JPA entities.
 
-## Troubleshooting
+## Step 7: Troubleshooting
 
 ### Common Issues
 
@@ -193,7 +229,7 @@ The Spring Boot application is configured with `spring.jpa.hibernate.ddl-auto=up
 - **Aiven Dashboard**: Monitor database performance, connections, and queries
 - **Application Logs**: Check both backend and frontend logs for errors
 
-## Security Considerations
+## Step 8: Security Considerations
 
 1. **Never commit sensitive data** to Git (passwords, API keys)
 2. **Use environment variables** for all configuration
@@ -203,7 +239,7 @@ The Spring Boot application is configured with `spring.jpa.hibernate.ddl-auto=up
 6. **Implement rate limiting** on API endpoints
 7. **Regular backups** of the database (Aiven provides this)
 
-## Scaling
+## Step 9: Scaling
 
 ### Backend Scaling
 
@@ -219,7 +255,7 @@ The Spring Boot application is configured with `spring.jpa.hibernate.ddl-auto=up
 - Optimize bundle size
 - Enable compression
 
-## Maintenance
+## Step 10: Maintenance
 
 - **Regular updates**: Keep dependencies updated
 - **Monitor logs**: Check for errors and performance issues
@@ -247,14 +283,15 @@ For issues related to:
 
 **Aiven**: Depends on your plan (consult Aiven pricing)
 
-## Next Steps
+## Step 11: Next Steps
 
 1. Deploy using the instructions above
-2. Test all functionalities thoroughly
-3. Set up monitoring and alerts
-4. Configure custom domain (optional)
-5. Set up CI/CD pipeline (optional)
-6. Document any custom configurations
+2. Set the DATABASE_PASSWORD environment variable in Render
+3. Test all functionalities thoroughly
+4. Set up monitoring and alerts
+5. Configure custom domain (optional)
+6. Set up CI/CD pipeline (optional)
+7. Document any custom configurations
 
 ---
 

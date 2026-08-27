@@ -13,7 +13,7 @@ services:
       - key: DATABASE_USERNAME
         value: avnadmin
       - key: DATABASE_PASSWORD
-        value: [your-aiven-database-password]
+        sync: false
       - key: JWT_SECRET
         generateValue: true
         length: 64
