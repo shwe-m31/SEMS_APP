@@ -42,8 +42,10 @@ Your Aiven MySQL database is already configured with the following credentials:
 
 The backend is already configured with:
 - Updated `application.properties` with environment variables
-- `Procfile` for Render deployment
+- `Dockerfile` for Docker-based deployment (required for Render)
 - `render.yaml` configuration
+
+**Note**: Render doesn't support native Java runtime, so we use Docker for Spring Boot deployment.
 
 ### 2.2 Deploy to Render
 
@@ -78,9 +80,9 @@ After the Blueprint creates the services, you MUST manually set the database pas
 4. Connect your Git repository
 5. Configure the service:
    - **Name**: sems-backend
-   - **Environment**: Java (Spring Boot)
-   - **Build Command**: `mvn clean package -DskipTests`
-   - **Start Command**: `java -jar target/sems-backend-1.0.0.jar`
+   - **Environment**: Docker
+   - **Docker Context**: ./backend
+   - **Dockerfile Path**: ./backend/Dockerfile
    - **Plan**: Free (or paid for better performance)
 
 6. Add Environment Variables:
