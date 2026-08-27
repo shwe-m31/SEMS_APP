@@ -9,7 +9,7 @@ services:
       - key: PORT
         value: 8080
       - key: DATABASE_URL
-        value: jdbc:mysql://mysql-2d367cc8-shwetham3101-project.a.aivencloud.com:15508/SEMS_APP_DATABASE?useSSL=true&requireSSL=true&serverTimezone=UTC
+        value: jdbc:mysql://mysql-2d367cc8-shwetham3101-project.a.aivencloud.com:15508/SEMS_APP_DATABASE?useSSL=true&requireSSL=true&allowPublicKeyRetrieval=true&serverTimezone=UTC
       - key: DATABASE_USERNAME
         value: avnadmin
       - key: DATABASE_PASSWORD

@@ -28,29 +28,6 @@ function LandingPage() {
               <Link to="/login" className="btn btn-secondary">Login to Dashboard</Link>
             </div>
           </div>
-          <div className="hero-image">
-            <div className="dashboard-preview">
-              <div className="preview-header">
-                <div className="preview-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <div className="preview-title">SEMS Dashboard</div>
-              </div>
-              <div className="preview-content">
-                <div className="preview-sidebar"></div>
-                <div className="preview-main">
-                  <div className="preview-cards">
-                    <div className="preview-card"></div>
-                    <div className="preview-card"></div>
-                    <div className="preview-card"></div>
-                  </div>
-                  <div className="preview-table"></div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 
@@ -62,32 +39,26 @@ function LandingPage() {
           </div>
           <div className="features-grid">
             <div className="feature-card">
-              <div className="feature-icon">🏢</div>
               <h3>Multi-Branch Management</h3>
               <p>Coordinate multiple locations with consistent controls, visibility and accountability across all branches.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">👥</div>
               <h3>Workforce Management</h3>
               <p>Manage attendance, shift planning and task ownership with automated tracking and reduced manual effort.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">📦</div>
               <h3>Inventory Control</h3>
               <p>Monitor stock movement, maintain supply continuity and respond to shortages with real-time alerts.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">💰</div>
               <h3>Billing & Sales</h3>
               <p>Create bills, review sales performance and maintain clean operational records with detailed reporting.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🤖</div>
               <h3>AI-Powered Insights</h3>
               <p>Review forecasts and pattern-based signals that support faster planning and data-driven decisions.</p>
             </div>
             <div className="feature-card">
-              <div className="feature-icon">🔔</div>
               <h3>Smart Notifications</h3>
               <p>Stay informed about exceptions, deadlines and branch-level operational changes in real-time.</p>
             </div>
