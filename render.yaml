@@ -3,7 +3,6 @@ services:
   - type: web
     name: sems-backend
     env: docker
-    plan: free
     dockerContext: ./backend
     dockerfilePath: ./backend/Dockerfile
     envVars:
@@ -25,7 +24,6 @@ services:
   - type: web
     name: sems-frontend
     env: static
-    plan: free
     buildCommand: cd frontend && npm run build
     staticPublishPath: frontend/build
     envVars:

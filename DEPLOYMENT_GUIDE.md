@@ -83,7 +83,7 @@ After the Blueprint creates the services, you MUST manually set the database pas
    - **Environment**: Docker
    - **Docker Context**: ./backend
    - **Dockerfile Path**: ./backend/Dockerfile
-   - **Plan**: Free (or paid for better performance)
+   - **Plan**: Select appropriate plan (Render no longer offers free plans for web services)
 
 6. Add Environment Variables:
    ```
@@ -273,15 +273,19 @@ For issues related to:
 
 ## Cost Estimate
 
-**Render Free Tier**:
-- Backend: Free (with limitations)
-- Frontend: Free (with limitations)
-- Total: $0/month
+**Important Note**: Render no longer offers free plans for web services. You will need to select a paid plan for deployment.
 
-**Paid Plans** (if needed):
-- Backend: Starting at $7/month
-- Frontend: Starting at $7/month
-- Total: ~$14/month
+**Render Pricing** (current as of 2026):
+- **Backend (Docker)**: Starting at ~$7/month for basic configuration
+- **Frontend (Static)**: Starting at ~$7/month for basic configuration
+- **Total**: ~$14/month minimum
+
+**Plan Recommendations**:
+- **Starter Plan**: Good for development and small projects
+- **Standard Plan**: Better performance for production use
+- **Pro Plan**: For high-traffic applications
+
+**Aiven**: Depends on your chosen plan (consult Aiven pricing for database costs)
 
 **Aiven**: Depends on your plan (consult Aiven pricing)
 
