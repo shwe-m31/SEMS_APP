@@ -105,9 +105,22 @@ After the Blueprint creates the services, you MUST manually set the database pas
 4. Connect your repository
 5. Render will automatically detect `render.yaml` and deploy both services
 
-### 2.3 Set Database Password (Required for Blueprint Deployment)
+### 2.3 Update Backend CORS Configuration
 
-If you used the Blueprint deployment method, you MUST set the database password manually:
+After backend deployment, update CORS settings to allow frontend access:
+
+1. Go to your `sems-backend` service in Render Dashboard
+2. Navigate to "Environment" section
+3. Update `CORS_ALLOWED_ORIGINS`:
+   ```
+   CORS_ALLOWED_ORIGINS: https://sems-frontend.onrender.com
+   ```
+4. Click "Save Changes"
+5. Render will automatically redeploy the backend service
+
+### 2.4 Set Database Password (Required)
+
+You MUST set the database password manually for the backend to connect:
 
 1. Go to Render Dashboard → sems-backend service
 2. Click on "Environment" tab
@@ -118,13 +131,43 @@ If you used the Blueprint deployment method, you MUST set the database password 
 5. Click "Save Changes"
 6. Render will automatically redeploy the backend service
 
-### 2.4 Verify Backend Deployment
+### 2.5 Verify Backend Deployment
 
 - Check the Render dashboard for deployment status
 - Once deployed, you'll get a URL like: `https://sems-backend.onrender.com`
 - Test the API: `https://sems-backend.onrender.com/api/auth/login`
 
 ## Step 4: Frontend Deployment (Render)
+
+### 4.1 Prepare Frontend Code
+
+The frontend is now configured with:
+- Dockerfile for Docker-based deployment (required for Render)
+- nginx configuration for serving React app
+- Environment variable support for API URL
+
+### 4.2 Deploy to Render
+
+**Option A: Using Render Dashboard (Recommended)**
+
+1. Go to [Render Dashboard](https://dashboard.render.com/)
+2. Click "New +" button
+3. Select "Web Service"
+4. Connect your Git repository
+5. Configure the service:
+   - **Name**: sems-frontend
+   - **Environment**: Docker
+   - **Docker Context**: ./frontend
+   - **Dockerfile Path**: ./frontend/Dockerfile
+   - **Region**: Same region as backend (Oregon)
+   - **Plan**: Free (with sleep time)
+
+6. Add Environment Variables:
+   ```
+   REACT_APP_API_URL: https://sems-app-0y62.onrender.com/api
+   ```
+
+7. Click "Create Web Service"
 
 ### 3.1 Prepare Frontend Code
 

@@ -1,0 +1,35 @@
+# Dependencies
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Build output
+build
+dist
+
+# IDE
+.idea
+.vscode
+*.iml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Environment
+.env
+.env.local
+.env.development
+.env.production
+
+# Testing
+coverage
+.nyc_output
+
+# Misc
+*.tmp
+*.temp
