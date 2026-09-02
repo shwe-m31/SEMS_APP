@@ -55,6 +55,15 @@ export const workerAPI = {
   delete: (id) => api.delete(`/workers/${id}`),
 };
 
+// Admin API
+export const adminAPI = {
+  getAll: () => api.get('/admins'),
+  getById: (id) => api.get(`/admins/${id}`),
+  create: (adminData) => api.post('/admins', adminData),
+  update: (id, admin) => api.put(`/admins/${id}`, admin),
+  delete: (id) => api.delete(`/admins/${id}`),
+};
+
 // Task API
 export const taskAPI = {
   getByBranch: (branchId) => api.get(`/tasks/branch/${branchId}`),
@@ -137,6 +146,21 @@ export const aiAPI = {
   getPredictions: (branchId) => api.get(`/ai/predictions/${branchId}`),
   getAnomalies: (branchId) => api.get(`/ai/anomalies/${branchId}`),
   updateAnomalyStatus: (id, status) => api.put(`/ai/anomalies/${id}/status`, { status }),
+};
+
+// Notification API
+export const notificationAPI = {
+  getAll: () => api.get('/notifications'),
+  getUnreadCount: () => api.get('/notifications/count'),
+  markAsRead: (id) => api.put(`/notifications/${id}/read`),
+  markAllAsRead: () => api.put('/notifications/read-all'),
+};
+
+// Worker Shift API
+export const workerShiftAPI = {
+  getAll: () => api.get('/worker-shifts'),
+  create: (assignmentData) => api.post('/worker-shifts', assignmentData),
+  delete: (id) => api.delete(`/worker-shifts/${id}`),
 };
 
 export default api;

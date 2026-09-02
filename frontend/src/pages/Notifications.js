@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { notificationAPI } from '../services/api';
 import './Dashboard.css';
 
 function Notifications() {
@@ -17,13 +18,8 @@ function Notifications() {
 
   const fetchNotifications = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/notifications', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      setNotifications(data);
+      const response = await notificationAPI.getAll();
+      setNotifications(response.data);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     } finally {
@@ -33,13 +29,8 @@ function Notifications() {
 
   const fetchUnreadCount = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/notifications/count', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      setUnreadCount(data.count || 0);
+      const response = await notificationAPI.getUnreadCount();
+      setUnreadCount(response.data.count || 0);
     } catch (error) {
       console.error('Error fetching unread count:', error);
     }
@@ -52,12 +43,7 @@ function Notifications() {
 
   const handleMarkAsRead = async (notificationId) => {
     try {
-      await fetch(`http://localhost:8080/api/notifications/${notificationId}/read`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      await notificationAPI.markAsRead(notificationId);
       fetchNotifications();
       fetchUnreadCount();
     } catch (error) {
@@ -67,12 +53,7 @@ function Notifications() {
 
   const handleMarkAllAsRead = async () => {
     try {
-      await fetch('http://localhost:8080/api/notifications/read-all', {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
+      await notificationAPI.markAllAsRead();
       fetchNotifications();
       fetchUnreadCount();
     } catch (error) {

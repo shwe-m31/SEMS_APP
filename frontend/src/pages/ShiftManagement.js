@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { shiftAPI, workerAPI, branchAPI } from '../services/api';
+import { shiftAPI, workerAPI, branchAPI, workerShiftAPI } from '../services/api';
 import './Dashboard.css';
 
 function ShiftManagement() {
@@ -72,13 +72,8 @@ function ShiftManagement() {
 
   const fetchWorkerShifts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/worker-shifts', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-      const data = await response.json();
-      setWorkerShifts(data);
+      const response = await workerShiftAPI.getAll();
+      setWorkerShifts(response.data);
     } catch (error) {
       console.error('Error fetching worker shifts:', error);
     }
@@ -170,14 +165,7 @@ function ShiftManagement() {
         date: assignmentData.date
       };
 
-      await fetch('http://localhost:8080/api/worker-shifts', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(assignData)
-      });
+      await workerShiftAPI.create(assignData);
 
       alert('Shift assigned successfully');
       setShowAssignmentModal(false);
@@ -191,12 +179,7 @@ function ShiftManagement() {
   const handleDeleteAssignment = async (assignmentId) => {
     if (window.confirm('Are you sure you want to remove this shift assignment?')) {
       try {
-        await fetch(`http://localhost:8080/api/worker-shifts/${assignmentId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        await workerShiftAPI.delete(assignmentId);
         alert('Shift assignment removed successfully');
         fetchWorkerShifts();
       } catch (error) {

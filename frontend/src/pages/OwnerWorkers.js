@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { branchAPI } from '../services/api';
+import { branchAPI, workerAPI } from '../services/api';
 import './Dashboard.css';
 
 function OwnerWorkers() {
@@ -28,17 +28,20 @@ function OwnerWorkers() {
 
   const fetchWorkers = async () => {
     try {
-      let url = 'http://localhost:8080/api/workers';
+      let response;
       if (selectedBranch) {
-        url = `http://localhost:8080/api/workers/branch/${selectedBranch}`;
-      }
-      const response = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        response = await workerAPI.getByBranch(selectedBranch);
+        setWorkers(response.data);
+      } else {
+        // Get all branches and their workers
+        const branchesResponse = await branchAPI.getAll();
+        const allWorkers = [];
+        for (const branch of branchesResponse.data) {
+          const workersResponse = await workerAPI.getByBranch(branch.id);
+          allWorkers.push(...workersResponse.data);
         }
-      });
-      const data = await response.json();
-      setWorkers(data);
+        setWorkers(allWorkers);
+      }
     } catch (error) {
       console.error('Error fetching workers:', error);
       alert('Failed to fetch workers');

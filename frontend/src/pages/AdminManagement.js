@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { branchAPI } from '../services/api';
+import { branchAPI, adminAPI } from '../services/api';
 import './Dashboard.css';
 
 function AdminManagement() {
@@ -28,14 +28,8 @@ function AdminManagement() {
 
   const fetchAdmins = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/admins', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'application/json'
-        }
-      });
-      const data = await response.json();
-      setAdmins(data);
+      const response = await adminAPI.getAll();
+      setAdmins(response.data);
     } catch (error) {
       console.error('Error fetching admins:', error);
       alert('Failed to fetch admins');
@@ -87,12 +81,7 @@ function AdminManagement() {
   const handleDelete = async (adminId) => {
     if (window.confirm('Are you sure you want to delete this admin?')) {
       try {
-        await fetch(`http://localhost:8080/api/admins/${adminId}`, {
-          method: 'DELETE',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        await adminAPI.delete(adminId);
         alert('Admin deleted successfully');
         fetchAdmins();
       } catch (error) {
@@ -110,14 +99,7 @@ function AdminManagement() {
           designation: formData.designation,
           branchId: formData.branchId ? parseInt(formData.branchId) : null
         };
-        await fetch(`http://localhost:8080/api/admins/${editingAdmin.id}`, {
-          method: 'PUT',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(updateData)
-        });
+        await adminAPI.update(editingAdmin.id, updateData);
         alert('Admin updated successfully');
       } else {
         const createData = {
@@ -128,14 +110,7 @@ function AdminManagement() {
           branchId: parseInt(formData.branchId),
           designation: formData.designation
         };
-        await fetch('http://localhost:8080/api/admins', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(createData)
-        });
+        await adminAPI.create(createData);
         alert('Admin created successfully');
       }
       setShowModal(false);
