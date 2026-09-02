@@ -33,3 +33,7 @@ coverage
 # Misc
 *.tmp
 *.temp
+
+# Backend
+backend
+../backend
