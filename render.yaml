@@ -16,14 +16,4 @@ services:
         generateValue: true
         length: 64
       - key: CORS_ALLOWED_ORIGINS
-        value: https://sems-frontend.onrender.com,https://sems-frontend.onrender.com/
-
-  # Frontend Service
-  - type: web
-    name: sems-frontend
-    env: docker
-    dockerContext: frontend
-    dockerfilePath: frontend/Dockerfile
-    envVars:
-      - key: REACT_APP_API_URL
-        value: https://sems-app-0y62.onrender.com/api
+        value: https://sems-frontend-4n7n.onrender.com,https://sems-frontend-4n7n.onrender.com/
