@@ -7,7 +7,7 @@ import './AiInsights.css';
 function AiInsights() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-  const [branchId, setBranchId] = useState(user?.branchId || 1);
+  const [branchId, setBranchId] = useState(user?.branchId);
   const [inventoryForecast, setInventoryForecast] = useState(null);
   const [salesPrediction, setSalesPrediction] = useState(null);
   const [productivityAnalysis, setProductivityAnalysis] = useState(null);

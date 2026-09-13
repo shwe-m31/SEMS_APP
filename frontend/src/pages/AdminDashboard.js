@@ -16,7 +16,7 @@ function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const response = await dashboardAPI.getAdminDashboard(user?.branchId);
+      const response = await dashboardAPI.getAdminDashboard();
       setDashboardData(response.data);
     } catch (error) {
       console.error('Error fetching dashboard data:', error);

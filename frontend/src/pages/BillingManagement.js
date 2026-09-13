@@ -10,7 +10,7 @@ function BillingManagement() {
   const [bills, setBills] = useState([]);
   const [inventory, setInventory] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(user?.branchId || '');
+  const [selectedBranch, setSelectedBranch] = useState(user?.branchId ? String(user.branchId) : '');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [formData, setFormData] = useState({
@@ -31,7 +31,7 @@ function BillingManagement() {
 
   const fetchBills = async () => {
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       const response = await billingAPI.getByBranch(branchId);
       setBills(response.data);
     } catch (error) {
@@ -44,7 +44,7 @@ function BillingManagement() {
 
   const fetchInventory = async () => {
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       const response = await inventoryAPI.getByBranch(branchId);
       setInventory(response.data);
     } catch (error) {

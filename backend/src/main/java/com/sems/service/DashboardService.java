@@ -101,15 +101,22 @@ public class DashboardService {
         return dashboard;
     }
     
-    public Map<String, Object> getAdminDashboard(Long branchId) {
-        Branch branch = branchRepository.findById(branchId).orElse(null);
+    public Map<String, Object> getAdminDashboard() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        
+        // Get admin's branch
+        Admin admin = adminRepository.findByUserId(userPrincipal.getId()).orElse(null);
+        if (admin == null) return null;
+        
+        Branch branch = admin.getBranch();
         if (branch == null) return null;
         
         List<Worker> workers = workerRepository.findByBranchId(branch.getId());
-        List<Task> pendingTasks = taskRepository.findByBranchIdAndStatus(branchId, Task.TaskStatus.PENDING);
-        List<Attendance> todayAttendance = attendanceRepository.findByBranchIdAndDate(branchId, LocalDate.now());
-        List<Inventory> inventory = inventoryRepository.findByBranchId(branchId);
-        List<Sales> todaySales = salesRepository.findByBranchIdAndSaleDateBetween(branchId, LocalDate.now(), LocalDate.now());
+        List<Task> pendingTasks = taskRepository.findByBranchIdAndStatus(branch.getId(), Task.TaskStatus.PENDING);
+        List<Attendance> todayAttendance = attendanceRepository.findByBranchIdAndDate(branch.getId(), LocalDate.now());
+        List<Inventory> inventory = inventoryRepository.findByBranchId(branch.getId());
+        List<Sales> todaySales = salesRepository.findByBranchIdAndSaleDateBetween(branch.getId(), LocalDate.now(), LocalDate.now());
         
         int presentCount = 0;
         for (Attendance attendance : todayAttendance) {

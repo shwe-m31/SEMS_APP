@@ -27,10 +27,10 @@ public class DashboardController {
         return ResponseEntity.badRequest().body("Unable to fetch dashboard data");
     }
     
-    @GetMapping("/admin/{branchId}")
+    @GetMapping("/admin")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<?> getAdminDashboard(@PathVariable Long branchId) {
-        Map<String, Object> dashboard = dashboardService.getAdminDashboard(branchId);
+    public ResponseEntity<?> getAdminDashboard() {
+        Map<String, Object> dashboard = dashboardService.getAdminDashboard();
         if (dashboard != null) {
             return ResponseEntity.ok(dashboard);
         }

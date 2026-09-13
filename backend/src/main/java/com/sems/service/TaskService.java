@@ -50,6 +50,16 @@ public class TaskService {
         
         if (branch == null || assignedBy == null) return null;
         
+        // Validate that assigned worker belongs to the same branch
+        if (assignedTo != null && !assignedTo.getBranch().getId().equals(branchId)) {
+            throw new IllegalArgumentException("Assigned worker must belong to the same branch");
+        }
+        
+        // Validate that admin belongs to the same branch
+        if (!assignedBy.getBranch().getId().equals(branchId)) {
+            throw new IllegalArgumentException("Admin must belong to the same branch");
+        }
+        
         task.setBranch(branch);
         task.setAssignedTo(assignedTo);
         task.setAssignedBy(assignedBy);

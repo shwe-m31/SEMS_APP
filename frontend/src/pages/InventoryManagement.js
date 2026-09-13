@@ -9,7 +9,7 @@ function InventoryManagement() {
   const navigate = useNavigate();
   const [inventory, setInventory] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(user?.branchId || '');
+  const [selectedBranch, setSelectedBranch] = useState(user?.branchId ? String(user.branchId) : '');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
@@ -31,7 +31,7 @@ function InventoryManagement() {
 
   const fetchInventory = async () => {
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       const response = await inventoryAPI.getByBranch(branchId);
       setInventory(response.data);
     } catch (error) {

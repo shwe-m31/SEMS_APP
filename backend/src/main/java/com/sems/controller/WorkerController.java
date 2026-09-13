@@ -43,6 +43,14 @@ public class WorkerController {
         worker.setDesignation((String) workerData.get("designation"));
         worker.setHireDate(java.time.LocalDate.parse((String) workerData.get("hireDate")));
         
+        // Set branch from request
+        if (workerData.get("branchId") != null) {
+            Long branchId = Long.valueOf(workerData.get("branchId").toString());
+            com.sems.entity.Branch branch = new com.sems.entity.Branch();
+            branch.setId(branchId);
+            worker.setBranch(branch);
+        }
+        
         Worker createdWorker = workerService.createWorker(
             worker,
             (String) workerData.get("email"),

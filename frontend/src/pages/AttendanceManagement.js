@@ -10,7 +10,7 @@ function AttendanceManagement() {
   const [attendance, setAttendance] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(user?.branchId || '');
+  const [selectedBranch, setSelectedBranch] = useState(user?.branchId ? String(user.branchId) : '');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [loading, setLoading] = useState(true);
   const [markingAttendance, setMarkingAttendance] = useState(false);
@@ -47,7 +47,7 @@ function AttendanceManagement() {
 
   const fetchWorkers = async () => {
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       const response = await workerAPI.getByBranch(branchId);
       setWorkers(response.data);
     } catch (error) {
@@ -72,7 +72,7 @@ function AttendanceManagement() {
   const handleMarkAttendance = async (workerId) => {
     setMarkingAttendance(true);
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       await attendanceAPI.mark({
         workerId,
         branchId,

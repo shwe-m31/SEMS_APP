@@ -47,6 +47,16 @@ public class WorkerService {
         User savedUser = userRepository.save(user);
         
         worker.setUser(savedUser);
+        
+        // Ensure branch is properly loaded before saving
+        if (worker.getBranch() != null && worker.getBranch().getId() != null) {
+            Branch branch = branchRepository.findById(worker.getBranch().getId())
+                .orElseThrow(() -> new IllegalArgumentException("Branch not found"));
+            worker.setBranch(branch);
+        } else {
+            throw new IllegalArgumentException("Branch must be specified for worker");
+        }
+        
         return workerRepository.save(worker);
     }
     

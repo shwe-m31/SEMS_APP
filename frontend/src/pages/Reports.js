@@ -8,7 +8,7 @@ function Reports() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(user?.branchId || '');
+  const [selectedBranch, setSelectedBranch] = useState(user?.branchId ? String(user.branchId) : '');
   const [selectedReport, setSelectedReport] = useState('sales');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
@@ -44,7 +44,7 @@ function Reports() {
   const fetchReportData = async () => {
     setLoading(true);
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       let data = null;
 
       switch (selectedReport) {

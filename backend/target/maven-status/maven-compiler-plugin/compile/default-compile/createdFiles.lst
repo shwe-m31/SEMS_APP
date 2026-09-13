@@ -67,8 +67,10 @@ com\sems\service\DashboardService.class
 com\sems\service\AuthService.class
 com\sems\repository\WorkerRepository.class
 com\sems\security\CustomUserDetailsService.class
+com\sems\service\WorkerShiftService.class
 com\sems\repository\AiAnomalyRepository.class
 com\sems\repository\ProductRepository.class
+com\sems\controller\WorkerShiftController.class
 com\sems\entity\BillItem.class
 com\sems\security\JwtAuthenticationEntryPoint.class
 com\sems\entity\AiPrediction$PredictionType.class
@@ -90,3 +92,4 @@ com\sems\controller\DashboardController.class
 com\sems\controller\SalesController.class
 com\sems\security\UserPrincipal.class
 com\sems\service\ExpenseService.class
+com\sems\repository\WorkerShiftRepository.class

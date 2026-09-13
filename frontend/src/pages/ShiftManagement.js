@@ -20,7 +20,7 @@ function ShiftManagement() {
     startTime: '',
     endTime: '',
     description: '',
-    branchId: user?.branchId || ''
+    branchId: user?.branchId ? String(user.branchId) : ''
   });
   const [assignmentData, setAssignmentData] = useState({
     workerId: '',
@@ -41,8 +41,12 @@ function ShiftManagement() {
 
   const fetchShifts = async () => {
     try {
-      const branchId = user?.branchId || 1;
-      const response = await shiftAPI.getByBranch(branchId);
+      if (!user?.branchId) {
+        console.error('No branch ID available for user');
+        setLoading(false);
+        return;
+      }
+      const response = await shiftAPI.getByBranch(user.branchId);
       setShifts(response.data);
     } catch (error) {
       console.error('Error fetching shifts:', error);
@@ -53,8 +57,11 @@ function ShiftManagement() {
 
   const fetchWorkers = async () => {
     try {
-      const branchId = user?.branchId || 1;
-      const response = await workerAPI.getByBranch(branchId);
+      if (!user?.branchId) {
+        console.error('No branch ID available for user');
+        return;
+      }
+      const response = await workerAPI.getByBranch(user.branchId);
       setWorkers(response.data);
     } catch (error) {
       console.error('Error fetching workers:', error);
@@ -91,7 +98,7 @@ function ShiftManagement() {
       startTime: '',
       endTime: '',
       description: '',
-      branchId: user?.branchId || ''
+      branchId: user?.branchId ? String(user.branchId) : ''
     });
     setShowShiftModal(true);
   };

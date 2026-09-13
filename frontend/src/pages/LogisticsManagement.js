@@ -9,7 +9,7 @@ function LogisticsManagement() {
   const navigate = useNavigate();
   const [logistics, setLogistics] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(user?.branchId || '');
+  const [selectedBranch, setSelectedBranch] = useState(user?.branchId ? String(user.branchId) : '');
   const [selectedStatus, setSelectedStatus] = useState('');
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -34,7 +34,7 @@ function LogisticsManagement() {
 
   const fetchLogistics = async () => {
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       let response;
       
       if (selectedStatus) {

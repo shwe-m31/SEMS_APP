@@ -11,7 +11,7 @@ function WorkerManagement() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingWorker, setEditingWorker] = useState(null);
-  const [branchId, setBranchId] = useState(user?.branchId || 1);
+  const [branchId, setBranchId] = useState(user?.branchId);
   const [formData, setFormData] = useState({
     name: '',
     email: '',

@@ -33,7 +33,7 @@ export const authAPI = {
 // Dashboard API
 export const dashboardAPI = {
   getOwnerDashboard: () => api.get('/dashboard/owner'),
-  getAdminDashboard: (branchId) => api.get(`/dashboard/admin/${branchId}`),
+  getAdminDashboard: () => api.get('/dashboard/admin'),
   getWorkerDashboard: () => api.get('/dashboard/worker'),
 };
 

@@ -9,7 +9,7 @@ function SalesManagement() {
   const navigate = useNavigate();
   const [sales, setSales] = useState([]);
   const [branches, setBranches] = useState([]);
-  const [selectedBranch, setSelectedBranch] = useState(user?.branchId || '');
+  const [selectedBranch, setSelectedBranch] = useState(user?.branchId ? String(user.branchId) : '');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [totalSales, setTotalSales] = useState(0);
@@ -29,7 +29,7 @@ function SalesManagement() {
 
   const fetchSales = async () => {
     try {
-      const branchId = selectedBranch || user?.branchId || 1;
+      const branchId = selectedBranch || user?.branchId;
       let response;
       
       if (startDate && endDate) {
