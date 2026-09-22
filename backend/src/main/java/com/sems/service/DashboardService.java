@@ -3,15 +3,14 @@ package com.sems.service;
 import com.sems.entity.*;
 import com.sems.repository.*;
 import com.sems.security.UserPrincipal;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DashboardService {
@@ -44,9 +43,17 @@ public class DashboardService {
         this.adminRepository = adminRepository;
     }
     
+    private void checkPasswordChangeRequired(Long userId) {
+        User user = userRepository.findById(userId).orElse(null);
+        if (user != null && Boolean.TRUE.equals(user.getMustChangePassword())) {
+            throw new AccessDeniedException("Password change required before accessing system resources");
+        }
+    }
+
     public Map<String, Object> getOwnerDashboard() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        checkPasswordChangeRequired(userPrincipal.getId());
         
         User user = userRepository.findById(userPrincipal.getId()).orElse(null);
         if (user == null) return null;
@@ -59,19 +66,53 @@ public class DashboardService {
         
         Map<String, Object> dashboard = new HashMap<>();
         dashboard.put("organization", organization);
-        dashboard.put("branches", branches);
+        dashboard.put("ownerName", user.getName());
         dashboard.put("totalBranches", branches.size());
         
         int totalWorkers = 0;
+        int totalAdmins = 0;
         BigDecimal totalSales = BigDecimal.ZERO;
         int totalInventory = 0;
         int pendingTasks = 0;
         int presentToday = 0;
         
+        List<Map<String, Object>> branchDetailsList = new ArrayList<>();
+
         for (Branch branch : branches) {
             List<Worker> workers = workerRepository.findByBranchId(branch.getId());
             totalWorkers += workers.size();
             
+            List<Admin> branchAdmins = adminRepository.findByBranchId(branch.getId());
+            totalAdmins += branchAdmins.size();
+
+            Map<String, Object> bMap = new HashMap<>();
+            bMap.put("id", branch.getId());
+            bMap.put("name", branch.getName());
+            bMap.put("branchCode", branch.getBranchCode());
+            bMap.put("state", branch.getState());
+            bMap.put("city", branch.getCity());
+            bMap.put("pincode", branch.getPincode());
+            bMap.put("category", branch.getCategory() != null ? branch.getCategory() : organization.getCategory());
+            bMap.put("organizationType", branch.getOrganizationType() != null ? branch.getOrganizationType() : organization.getSubCategory());
+            bMap.put("location", branch.getLocation());
+            bMap.put("address", branch.getAddress());
+            bMap.put("phone", branch.getPhone());
+
+            if (!branchAdmins.isEmpty()) {
+                Admin firstAdmin = branchAdmins.get(0);
+                Map<String, Object> adminMap = new HashMap<>();
+                adminMap.put("id", firstAdmin.getId());
+                adminMap.put("name", firstAdmin.getUser().getName());
+                adminMap.put("email", firstAdmin.getUser().getEmail());
+                adminMap.put("phone", firstAdmin.getUser().getPhone());
+                adminMap.put("designation", firstAdmin.getDesignation());
+                bMap.put("admin", adminMap);
+            } else {
+                bMap.put("admin", null);
+            }
+
+            branchDetailsList.add(bMap);
+
             List<Sales> branchSales = salesRepository.findByBranchIdAndSaleDateBetween(
                 branch.getId(), LocalDate.now(), LocalDate.now());
             for (Sales sale : branchSales) {
@@ -92,6 +133,8 @@ public class DashboardService {
             }
         }
         
+        dashboard.put("branches", branchDetailsList);
+        dashboard.put("totalAdmins", totalAdmins);
         dashboard.put("totalWorkers", totalWorkers);
         dashboard.put("todaySales", totalSales);
         dashboard.put("totalInventory", totalInventory);
@@ -104,6 +147,7 @@ public class DashboardService {
     public Map<String, Object> getAdminDashboard() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        checkPasswordChangeRequired(userPrincipal.getId());
         
         // Get admin's branch
         Admin admin = adminRepository.findByUserId(userPrincipal.getId()).orElse(null);
@@ -131,7 +175,19 @@ public class DashboardService {
         }
         
         Map<String, Object> dashboard = new HashMap<>();
-        dashboard.put("branch", branch);
+        Map<String, Object> branchMap = new HashMap<>();
+        branchMap.put("id", branch.getId());
+        branchMap.put("name", branch.getName());
+        branchMap.put("branchCode", branch.getBranchCode());
+        branchMap.put("state", branch.getState());
+        branchMap.put("city", branch.getCity());
+        branchMap.put("pincode", branch.getPincode());
+        branchMap.put("category", branch.getCategory());
+        branchMap.put("organizationType", branch.getOrganizationType());
+        branchMap.put("location", branch.getLocation());
+        branchMap.put("phone", branch.getPhone());
+        branchMap.put("address", branch.getAddress());
+        dashboard.put("branch", branchMap);
         dashboard.put("workerCount", workers.size());
         dashboard.put("attendanceToday", presentCount);
         dashboard.put("pendingTasks", pendingTasks.size());
@@ -144,6 +200,7 @@ public class DashboardService {
     public Map<String, Object> getWorkerDashboard() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
+        checkPasswordChangeRequired(userPrincipal.getId());
         
         Worker worker = workerRepository.findByUserId(userPrincipal.getId()).orElse(null);
         if (worker == null) return null;
@@ -155,7 +212,21 @@ public class DashboardService {
         Attendance todayAttendance = attendanceRepository.findByWorkerIdAndDate(worker.getId(), LocalDate.now()).orElse(null);
         
         Map<String, Object> dashboard = new HashMap<>();
-        dashboard.put("worker", worker);
+        Map<String, Object> workerMap = new HashMap<>();
+        workerMap.put("id", worker.getId());
+        workerMap.put("employeeId", worker.getEmployeeId());
+        workerMap.put("designation", worker.getDesignation());
+        workerMap.put("salary", worker.getSalary());
+        workerMap.put("hireDate", worker.getHireDate());
+        workerMap.put("status", worker.getStatus() != null ? worker.getStatus().name() : "ACTIVE");
+        if (worker.getBranch() != null) {
+            Map<String, Object> bMap = new HashMap<>();
+            bMap.put("id", worker.getBranch().getId());
+            bMap.put("name", worker.getBranch().getName());
+            bMap.put("branchCode", worker.getBranch().getBranchCode());
+            workerMap.put("branch", bMap);
+        }
+        dashboard.put("worker", workerMap);
         dashboard.put("assignedTasks", assignedTasks.size());
         dashboard.put("pendingTasks", pendingTasks.size());
         dashboard.put("completedTasks", completedTasks.size());

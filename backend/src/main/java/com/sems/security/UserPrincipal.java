@@ -12,14 +12,16 @@ import java.util.Collections;
 public class UserPrincipal implements UserDetails {
     
     private Long id;
+    private String username;
     private String email;
     @JsonIgnore
     private String password;
     private String name;
     private Collection<? extends GrantedAuthority> authorities;
     
-    public UserPrincipal(Long id, String email, String password, String name, Collection<? extends GrantedAuthority> authorities) {
+    public UserPrincipal(Long id, String username, String email, String password, String name, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
+        this.username = username;
         this.email = email;
         this.password = password;
         this.name = name;
@@ -33,6 +35,7 @@ public class UserPrincipal implements UserDetails {
         
         return new UserPrincipal(
             user.getId(),
+            user.getUsername() != null ? user.getUsername() : user.getEmail(),
             user.getEmail(),
             user.getPassword(),
             user.getName(),
@@ -54,7 +57,7 @@ public class UserPrincipal implements UserDetails {
     
     @Override
     public String getUsername() {
-        return email;
+        return username != null ? username : email;
     }
     
     @Override

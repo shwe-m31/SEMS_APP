@@ -11,4 +11,6 @@ import java.util.Optional;
 public interface AdminRepository extends JpaRepository<Admin, Long> {
     List<Admin> findByBranchId(Long branchId);
     Optional<Admin> findByUserId(Long userId);
+    Optional<Admin> findFirstByBranchBranchCode(String branchCode);
+    Optional<Admin> findFirstByBranchId(Long branchId);
 }

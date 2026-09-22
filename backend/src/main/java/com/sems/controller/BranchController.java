@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/branches")
-public class cdBranchController {
+public class BranchController {
     
     private final BranchService branchService;
     

@@ -11,6 +11,7 @@ USE sems_db;
 -- ============================================
 CREATE TABLE users (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(100) UNIQUE,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
@@ -18,8 +19,10 @@ CREATE TABLE users (
     date_of_birth DATE,
     gender VARCHAR(10),
     role ENUM('OWNER', 'ADMIN', 'WORKER') NOT NULL,
+    must_change_password BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_username (username),
     INDEX idx_email (email),
     INDEX idx_role (role)
 );
@@ -33,6 +36,8 @@ CREATE TABLE organizations (
     name VARCHAR(255) NOT NULL,
     type ENUM('SMALL', 'MEDIUM', 'LARGE') NOT NULL,
     industry_type ENUM('FOOD_RETAIL', 'TEXTILE_FABRIC', 'MANUFACTURING', 'WAREHOUSE_DISTRIBUTION', 'OTHER_MSME') NOT NULL,
+    category VARCHAR(100),
+    sub_category VARCHAR(100),
     has_branches BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -46,14 +51,21 @@ CREATE TABLE organizations (
 CREATE TABLE branches (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     organization_id BIGINT NOT NULL,
+    branch_code VARCHAR(50) UNIQUE,
     name VARCHAR(255) NOT NULL,
+    state VARCHAR(100),
+    city VARCHAR(100),
+    pincode VARCHAR(20),
+    category VARCHAR(100),
+    organization_type VARCHAR(100),
     location VARCHAR(255),
     address TEXT,
     phone VARCHAR(20),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (organization_id) REFERENCES organizations(id) ON DELETE CASCADE,
-    INDEX idx_organization (organization_id)
+    INDEX idx_organization (organization_id),
+    INDEX idx_branch_code (branch_code)
 );
 
 -- ============================================

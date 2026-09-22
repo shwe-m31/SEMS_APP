@@ -26,7 +26,11 @@ api.interceptors.request.use(
 // Auth API
 export const authAPI = {
   login: (credentials) => api.post('/auth/login', credentials),
+  loginAdmin: (credentials) => api.post('/auth/login-admin', credentials),
+  loginWorker: (credentials) => api.post('/auth/login-worker', credentials),
   register: (userData) => api.post('/auth/register', userData),
+  registerOwner: (data) => api.post('/auth/register-owner', data),
+  changePassword: (data) => api.post('/auth/change-password', data),
   getCurrentUser: () => api.get('/auth/me'),
 };
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { dashboardAPI, branchAPI } from '../services/api';
+import { dashboardAPI } from '../services/api';
 import './Dashboard.css';
 
 function OwnerDashboard() {
@@ -34,6 +34,8 @@ function OwnerDashboard() {
     return <div className="loading">Loading dashboard...</div>;
   }
 
+  const branches = dashboardData?.branches || [];
+
   return (
     <div className="dashboard">
       <header className="dashboard-header">
@@ -42,7 +44,7 @@ function OwnerDashboard() {
           <span className="user-role">Owner Dashboard</span>
         </div>
         <div className="header-right">
-          <span className="user-name">Welcome, {user?.name}</span>
+          <span className="user-name">Welcome, {dashboardData?.ownerName || user?.name}</span>
           <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
         </div>
       </header>
@@ -69,11 +71,15 @@ function OwnerDashboard() {
 
         <main className="main-content">
           <div className="dashboard-header">
-            <h2>Organization Overview</h2>
-            {dashboardData?.organization && (
-              <p className="organization-name">{dashboardData.organization.name}</p>
-            )}
-            <button onClick={() => navigate('/branches')} className="btn btn-primary">Manage Branches</button>
+            <div>
+              <h2>{dashboardData?.organization?.name || 'Organization Overview'}</h2>
+              <p style={{ margin: 0, color: '#64748b', fontSize: '13px' }}>
+                Owner: <strong>{dashboardData?.ownerName || user?.name}</strong> • Category: <strong>{dashboardData?.organization?.category || dashboardData?.organization?.industryType || 'N/A'}</strong>
+              </p>
+            </div>
+            <div>
+              <button onClick={() => navigate('/branches')} className="btn btn-primary">+ Manage Branches</button>
+            </div>
           </div>
 
           <div className="kpi-grid">
@@ -81,6 +87,13 @@ function OwnerDashboard() {
               <div className="kpi-content">
                 <h3>Total Branches</h3>
                 <p className="kpi-value">{dashboardData?.totalBranches || 0}</p>
+              </div>
+            </div>
+
+            <div className="kpi-card">
+              <div className="kpi-content">
+                <h3>Total Admins</h3>
+                <p className="kpi-value">{dashboardData?.totalAdmins || 0}</p>
               </div>
             </div>
 
@@ -111,29 +124,69 @@ function OwnerDashboard() {
                 <p className="kpi-value">{dashboardData?.pendingTasks || 0}</p>
               </div>
             </div>
-
-            <div className="kpi-card">
-              <div className="kpi-content">
-                <h3>Attendance Today</h3>
-                <p className="kpi-value">{dashboardData?.attendanceToday || 0}</p>
-              </div>
-            </div>
           </div>
 
-          <div className="section">
-            <h3>Branch Performance</h3>
-            <div className="branch-grid">
-              {dashboardData?.branches?.map(branch => (
-                <div key={branch.id} className="branch-card" onClick={() => navigate('/branches')} style={{cursor: 'pointer'}}>
-                  <h4>{branch.name}</h4>
-                  <p className="branch-location">{branch.location}</p>
-                  <div className="branch-stats">
-                    <span>Location: {branch.location}</span>
-                    <span>Phone: {branch.phone}</span>
-                  </div>
-                </div>
-              ))}
+          {/* BRANCH CARDS & TABLE SECTION */}
+          <div className="section" style={{ marginTop: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
+              <h3>Enterprise Branches & Assigned Admins</h3>
+              <span style={{ fontSize: '12px', color: '#64748b' }}>{branches.length} Registered Units</span>
             </div>
+
+            {branches.length === 0 ? (
+              <p style={{ color: '#64748b', fontStyle: 'italic' }}>No branches found.</p>
+            ) : (
+              <div className="table-container" style={{ background: '#ffffff', borderRadius: '6px', border: '1px solid #e2e8f0' }}>
+                <table className="data-table">
+                  <thead>
+                    <tr>
+                      <th>Branch Code</th>
+                      <th>Branch Name</th>
+                      <th>Location</th>
+                      <th>Category</th>
+                      <th>Organization Type</th>
+                      <th>Assigned Admin</th>
+                      <th>Admin Email</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {branches.map(branch => (
+                      <tr key={branch.id}>
+                        <td>
+                          <span style={{
+                            fontFamily: 'monospace',
+                            fontWeight: '700',
+                            color: '#1d4ed8',
+                            background: '#eff6ff',
+                            padding: '3px 8px',
+                            borderRadius: '4px',
+                            border: '1px solid #bfdbfe'
+                          }}>
+                            {branch.branchCode || '—'}
+                          </span>
+                        </td>
+                        <td><strong>{branch.name}</strong></td>
+                        <td>
+                          {branch.city ? `${branch.city}, ${branch.state} (${branch.pincode})` : (branch.location || '—')}
+                        </td>
+                        <td>{branch.category || '—'}</td>
+                        <td>{branch.organizationType || '—'}</td>
+                        <td>
+                          {branch.admin ? (
+                            <span style={{ fontWeight: 600, color: '#0f172a' }}>
+                              {branch.admin.name}
+                            </span>
+                          ) : (
+                            <span style={{ color: '#94a3b8', fontStyle: 'italic' }}>Unassigned</span>
+                          )}
+                        </td>
+                        <td>{branch.admin?.email || '—'}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </main>
       </div>

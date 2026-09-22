@@ -5,6 +5,7 @@ import com.sems.entity.Organization;
 import com.sems.repository.BranchRepository;
 import com.sems.repository.OrganizationRepository;
 import com.sems.security.UserPrincipal;
+import com.sems.util.BranchCodeGenerator;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -17,10 +18,13 @@ public class BranchService {
     
     private final BranchRepository branchRepository;
     private final OrganizationRepository organizationRepository;
+    private final BranchCodeGenerator branchCodeGenerator;
     
-    public BranchService(BranchRepository branchRepository, OrganizationRepository organizationRepository) {
+    public BranchService(BranchRepository branchRepository, OrganizationRepository organizationRepository,
+                         BranchCodeGenerator branchCodeGenerator) {
         this.branchRepository = branchRepository;
         this.organizationRepository = organizationRepository;
+        this.branchCodeGenerator = branchCodeGenerator;
     }
     
     public List<Branch> getAllBranches() {
@@ -45,7 +49,21 @@ public class BranchService {
         
         List<Organization> organizations = organizationRepository.findByOwnerId(userPrincipal.getId());
         if (!organizations.isEmpty()) {
-            branch.setOrganization(organizations.get(0));
+            Organization org = organizations.get(0);
+            branch.setOrganization(org);
+            
+            if (branch.getBranchCode() == null || branch.getBranchCode().trim().isEmpty()) {
+                branch.setBranchCode(branchCodeGenerator.generateBranchCode(branch.getCity(), branch.getName()));
+            }
+
+            if (branch.getLocation() == null || branch.getLocation().trim().isEmpty()) {
+                if (branch.getCity() != null && branch.getState() != null) {
+                    branch.setLocation(branch.getCity() + ", " + branch.getState());
+                } else if (branch.getCity() != null) {
+                    branch.setLocation(branch.getCity());
+                }
+            }
+
             return branchRepository.save(branch);
         }
         return null;
@@ -57,7 +75,13 @@ public class BranchService {
         if (branch == null) return null;
         
         branch.setName(branchDetails.getName());
-        branch.setLocation(branchDetails.getLocation());
+        if (branchDetails.getState() != null) branch.setState(branchDetails.getState());
+        if (branchDetails.getCity() != null) branch.setCity(branchDetails.getCity());
+        if (branchDetails.getPincode() != null) branch.setPincode(branchDetails.getPincode());
+        if (branchDetails.getCategory() != null) branch.setCategory(branchDetails.getCategory());
+        if (branchDetails.getOrganizationType() != null) branch.setOrganizationType(branchDetails.getOrganizationType());
+        branch.setLocation(branchDetails.getLocation() != null ? branchDetails.getLocation() : 
+                (branch.getCity() != null ? branch.getCity() + (branch.getState() != null ? ", " + branch.getState() : "") : branch.getLocation()));
         branch.setAddress(branchDetails.getAddress());
         branch.setPhone(branchDetails.getPhone());
         

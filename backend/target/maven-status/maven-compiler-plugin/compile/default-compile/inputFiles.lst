@@ -39,6 +39,7 @@ C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\SalesR
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\WorkerShiftRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\BranchService.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\BranchRepository.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\dto\ChangePasswordRequest.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Shift.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Expense.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\BillingService.java
@@ -59,6 +60,7 @@ C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\Attend
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\TaskRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\security\JwtTokenProvider.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\InventoryController.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\util\PasswordGenerator.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\AdminController.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\DashboardController.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\NotificationRepository.java
@@ -71,10 +73,14 @@ C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Product.ja
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\AiAnomalyRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\DashboardService.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\BranchController.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\util\BranchCodeGenerator.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\util\PasswordHashGenerator.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\dto\OwnerRegistrationRequest.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\SemsApplication.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\BillItem.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\service\WorkerService.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\entity\Task.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\repository\ProductRepository.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\SalesController.java
+C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\dto\OwnerRegistrationResponse.java
 C:\Users\shwet\Desktop\SEMS_APP\backend\src\main\java\com\sems\controller\NotificationController.java

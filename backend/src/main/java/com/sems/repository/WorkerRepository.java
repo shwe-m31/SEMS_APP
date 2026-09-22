@@ -12,5 +12,8 @@ public interface WorkerRepository extends JpaRepository<Worker, Long> {
     List<Worker> findByBranchId(Long branchId);
     Optional<Worker> findByUserId(Long userId);
     Optional<Worker> findByEmployeeId(String employeeId);
+    Optional<Worker> findByBranchIdAndEmployeeId(Long branchId, String employeeId);
+    Optional<Worker> findByBranchBranchCodeAndEmployeeId(String branchCode, String employeeId);
+    Optional<Worker> findByBranchBranchCodeAndUserUsername(String branchCode, String username);
     List<Worker> findByBranchIdAndStatus(Long branchId, Worker.WorkerStatus status);
 }

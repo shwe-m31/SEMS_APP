@@ -171,9 +171,16 @@ function WorkerManagement() {
 
         <main className="main-content">
           <div className="dashboard-header">
-            <h2>Worker Management</h2>
             <div>
-              <button onClick={() => navigate('/admin-dashboard')} className="btn btn-secondary">Back to Dashboard</button>
+              <h2>Worker Management</h2>
+              {user?.branchCode && (
+                <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>
+                  Branch: <strong>{user.branchName || 'Assigned Branch'}</strong> • Branch Code: <strong style={{ fontFamily: 'monospace', color: '#1d4ed8' }}>{user.branchCode}</strong>
+                </p>
+              )}
+            </div>
+            <div>
+              <button onClick={() => navigate('/admin-dashboard')} className="btn btn-secondary" style={{ marginRight: '0.5rem' }}>Back to Dashboard</button>
               <button onClick={handleCreate} className="btn btn-primary">+ Add New Worker</button>
             </div>
           </div>

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.time.LocalDateTime;
 
 @Entity
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Branch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +23,25 @@ public class Branch {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "organization_id", nullable = false)
+    @JsonIgnoreProperties({"owner", "branches", "hibernateLazyInitializer", "handler"})
     private Organization organization;
+
+    @Column(name = "branch_code", unique = true)
+    private String branchCode;
 
     @Column(nullable = false)
     private String name;
+
+    private String state;
+
+    private String city;
+
+    private String pincode;
+
+    private String category;
+
+    @Column(name = "organization_type")
+    private String organizationType;
 
     private String location;
 

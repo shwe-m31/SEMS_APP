@@ -35,15 +35,14 @@ public class AdminController {
     @PreAuthorize("hasRole('OWNER')")
     public ResponseEntity<?> createAdmin(@RequestBody Map<String, Object> body) {
         try {
-            Admin admin = adminService.createAdmin(
+            Map<String, Object> result = adminService.createAdmin(
                 (String) body.get("name"),
                 (String) body.get("email"),
-                (String) body.get("password"),
                 (String) body.get("phone"),
                 Long.valueOf(body.get("branchId").toString()),
                 (String) body.get("designation")
             );
-            return ResponseEntity.ok(admin);
+            return ResponseEntity.ok(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
         }

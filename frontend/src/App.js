@@ -23,6 +23,7 @@ import LogisticsManagement from './pages/LogisticsManagement';
 import Notifications from './pages/Notifications';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
+import ChangePasswordPage from './pages/ChangePasswordPage';
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
@@ -33,6 +34,14 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route 
+            path="/change-password" 
+            element={
+              <ProtectedRoute allowPasswordChange={true}>
+                <ChangePasswordPage />
+              </ProtectedRoute>
+            } 
+          />
           <Route 
             path="/owner-dashboard" 
             element={
