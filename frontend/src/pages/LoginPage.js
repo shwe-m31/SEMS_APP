@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import './LoginPage.css';
 
-function LoginPage() {
+export default function LoginPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
 
   // Role: OWNER | ADMIN | WORKER
   const [role, setRole] = useState('OWNER');
@@ -68,17 +70,15 @@ function LoginPage() {
 
       const response = await login(credentials);
 
-      // Check if first-login password change is required
       if (response.mustChangePassword) {
         navigate('/change-password');
         return;
       }
 
-      // Redirect based on role
       const roleDashboardMap = {
-        'OWNER': '/owner-dashboard',
-        'ADMIN': '/admin-dashboard',
-        'WORKER': '/worker-dashboard'
+        OWNER: '/owner-dashboard',
+        ADMIN: '/admin-dashboard',
+        WORKER: '/worker-dashboard'
       };
 
       navigate(roleDashboardMap[response.role] || '/');
@@ -91,152 +91,192 @@ function LoginPage() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-header">
-          <h1>Sign In</h1>
-          <p>Access your SEMS enterprise portal</p>
-        </div>
-
-        {/* 3 Role Tabs */}
-        <div className="login-role-tabs">
-          <button
-            type="button"
-            className={`role-tab-btn ${role === 'OWNER' ? 'active' : ''}`}
-            onClick={() => {
-              setRole('OWNER');
-              setError('');
-            }}
-          >
-            Owner
-          </button>
-          <button
-            type="button"
-            className={`role-tab-btn ${role === 'ADMIN' ? 'active' : ''}`}
-            onClick={() => {
-              setRole('ADMIN');
-              setError('');
-            }}
-          >
-            Admin
-          </button>
-          <button
-            type="button"
-            className={`role-tab-btn ${role === 'WORKER' ? 'active' : ''}`}
-            onClick={() => {
-              setRole('WORKER');
-              setError('');
-            }}
-          >
-            Worker
-          </button>
-        </div>
-
-        {error && <div className="error-message">{error}</div>}
-
-        <form className="login-form" onSubmit={handleSubmit}>
-          {/* OWNER FORM */}
-          {role === 'OWNER' && (
-            <div className="form-group">
-              <label htmlFor="owner-username">Username or Email</label>
-              <input
-                type="text"
-                id="owner-username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                required
-                placeholder="Enter username or owner email"
-                autoComplete="username"
-              />
-            </div>
-          )}
-
-          {/* ADMIN FORM */}
-          {role === 'ADMIN' && (
-            <div className="form-group">
-              <label htmlFor="admin-branch-code">Branch Code</label>
-              <input
-                type="text"
-                id="admin-branch-code"
-                value={branchCode}
-                onChange={(e) => setBranchCode(e.target.value)}
-                required
-                placeholder="e.g. SEMS-CHN-001"
-                style={{ textTransform: 'uppercase', fontFamily: 'monospace' }}
-              />
-            </div>
-          )}
-
-          {/* WORKER FORM */}
-          {role === 'WORKER' && (
-            <>
-              <div className="form-group">
-                <label htmlFor="worker-branch-code">Branch Code</label>
-                <input
-                  type="text"
-                  id="worker-branch-code"
-                  value={branchCode}
-                  onChange={(e) => setBranchCode(e.target.value)}
-                  required
-                  placeholder="e.g. SEMS-CHN-001"
-                  style={{ textTransform: 'uppercase', fontFamily: 'monospace' }}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="worker-emp-id">Employee ID</label>
-                <input
-                  type="text"
-                  id="worker-emp-id"
-                  value={employeeId}
-                  onChange={(e) => setEmployeeId(e.target.value)}
-                  required
-                  placeholder="e.g. FB-CH-001"
-                />
-              </div>
-            </>
-          )}
-
-          {/* PASSWORD FIELD */}
-          <div className="form-group">
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              placeholder={role === 'ADMIN' ? 'Enter temporary or permanent password' : 'Enter password'}
-              autoComplete="current-password"
-            />
+    <div className="auth-page">
+      <div className="auth-split-wrapper">
+        {/* Left Hero Statement Panel */}
+        <div className="auth-hero-panel">
+          <div className="auth-brand-head">
+            <Link to="/" className="auth-brand-title">
+              SEMS<span className="brand-dot">•</span>
+            </Link>
+            <button
+              type="button"
+              className="theme-toggle-btn"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+            >
+              {theme === 'dark' ? 'Light' : 'Dark'}
+            </button>
           </div>
 
-          <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Signing in...' : `Sign In as ${role.charAt(0) + role.slice(1).toLowerCase()}`}
-          </button>
-        </form>
+          <div className="auth-hero-statement">
+            <span className="auth-eyebrow">Enterprise Access</span>
+            <h1 className="auth-hero-title">
+              Enterprise clarity.<br />
+              Continuous control.
+            </h1>
+            <p className="auth-hero-desc">
+              Sign in to manage multi-location branch operations, workforce schedules,
+              inventory pipelines, and financial tracking across your commercial enterprise.
+            </p>
+          </div>
 
-        <div className="login-footer">
-          <p>
-            Don't have an account? <Link to="/register">Create Owner Account</Link>
-          </p>
-          <p>
-            <Link to="/">Back to Home</Link>
-          </p>
+          <div className="auth-hero-footer-meta">
+            <span>SEMS Architecture v2.0</span>
+            <span>Zero-Icon Minimalist UI</span>
+          </div>
         </div>
 
-        <div className="demo-credentials">
-          <h3>Quick Demo Sign-In</h3>
-          <p><strong>Owner:</strong> freshbake_owner / password123</p>
-          <p><strong>Admin:</strong> SEMS-CHN-001 / (generated temporary password)</p>
-          <p><strong>Worker:</strong> SEMS-CHN-001 / FB-CH-001 / password123</p>
-          <p style={{ marginTop: '0.4rem', fontSize: '10px', color: '#64748b' }}>
-            * Existing email accounts (e.g. owner@freshbake.com) also supported under Owner.
-          </p>
+        {/* Right Form Panel */}
+        <div className="auth-form-panel">
+          <div className="auth-form-card">
+            <div className="auth-form-header">
+              <h2>Console Sign In</h2>
+              <p>Select your authorized credential tier below</p>
+            </div>
+
+            {/* Role Switcher */}
+            <div className="role-segmented-switcher">
+              <button
+                type="button"
+                className={`role-switcher-tab ${role === 'OWNER' ? 'active' : ''}`}
+                onClick={() => {
+                  setRole('OWNER');
+                  setError('');
+                }}
+              >
+                Owner
+              </button>
+              <button
+                type="button"
+                className={`role-switcher-tab ${role === 'ADMIN' ? 'active' : ''}`}
+                onClick={() => {
+                  setRole('ADMIN');
+                  setError('');
+                }}
+              >
+                Admin
+              </button>
+              <button
+                type="button"
+                className={`role-switcher-tab ${role === 'WORKER' ? 'active' : ''}`}
+                onClick={() => {
+                  setRole('WORKER');
+                  setError('');
+                }}
+              >
+                Worker
+              </button>
+            </div>
+
+            {error && <div className="auth-error-alert">{error}</div>}
+
+            <form className="auth-form" onSubmit={handleSubmit}>
+              {role === 'OWNER' && (
+                <div className="form-field-group">
+                  <label htmlFor="owner-username">Username or Email</label>
+                  <input
+                    type="text"
+                    id="owner-username"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                    placeholder="Enter username or owner email"
+                    autoComplete="username"
+                  />
+                </div>
+              )}
+
+              {role === 'ADMIN' && (
+                <div className="form-field-group">
+                  <label htmlFor="admin-branch-code">Branch Code</label>
+                  <input
+                    type="text"
+                    id="admin-branch-code"
+                    value={branchCode}
+                    onChange={(e) => setBranchCode(e.target.value)}
+                    required
+                    placeholder="e.g. SEMS-CHN-001"
+                    style={{ textTransform: 'uppercase', fontFamily: 'monospace' }}
+                  />
+                </div>
+              )}
+
+              {role === 'WORKER' && (
+                <>
+                  <div className="form-field-group">
+                    <label htmlFor="worker-branch-code">Branch Code</label>
+                    <input
+                      type="text"
+                      id="worker-branch-code"
+                      value={branchCode}
+                      onChange={(e) => setBranchCode(e.target.value)}
+                      required
+                      placeholder="e.g. SEMS-CHN-001"
+                      style={{ textTransform: 'uppercase', fontFamily: 'monospace' }}
+                    />
+                  </div>
+
+                  <div className="form-field-group">
+                    <label htmlFor="worker-emp-id">Employee ID</label>
+                    <input
+                      type="text"
+                      id="worker-emp-id"
+                      value={employeeId}
+                      onChange={(e) => setEmployeeId(e.target.value)}
+                      required
+                      placeholder="e.g. FB-CH-001"
+                    />
+                  </div>
+                </>
+              )}
+
+              <div className="form-field-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  type="password"
+                  id="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                  placeholder={role === 'ADMIN' ? 'Temporary or permanent password' : 'Enter account password'}
+                  autoComplete="current-password"
+                />
+              </div>
+
+              <button type="submit" className="btn btn-primary" disabled={loading} style={{ width: '100%' }}>
+                {loading ? 'Authenticating...' : `Sign In as ${role.charAt(0) + role.slice(1).toLowerCase()}`}
+              </button>
+            </form>
+
+            <div className="auth-form-footer">
+              <p>
+                Don't have an enterprise account? <Link to="/register">Register Business</Link>
+              </p>
+              <p>
+                <Link to="/">Back to Homepage</Link>
+              </p>
+            </div>
+
+            {/* Quick Demo Credentials */}
+            <div className="demo-credentials-editorial">
+              <span className="demo-credentials-title">Quick Demo Credentials</span>
+              <div className="demo-credential-row">
+                <span>Owner:</span>
+                <span className="demo-credential-val">freshbake_owner / password123</span>
+              </div>
+              <div className="demo-credential-row">
+                <span>Admin:</span>
+                <span className="demo-credential-val">SEMS-CHN-001 / (temp password)</span>
+              </div>
+              <div className="demo-credential-row">
+                <span>Worker:</span>
+                <span className="demo-credential-val">SEMS-CHN-001 / FB-CH-001 / password123</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default LoginPage;

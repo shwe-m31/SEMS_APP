@@ -356,6 +356,7 @@ public class AuthService {
                 admin.setUser(savedAdminUser);
                 admin.setBranch(savedBranch);
                 admin.setDesignation("Branch Admin");
+                admin.setTemporaryPassword(tempPassword);
                 Admin savedAdmin = adminRepository.save(admin);
 
                 adminSummary = new OwnerRegistrationResponse.AdminSummary(

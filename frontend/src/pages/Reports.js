@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { salesAPI, expenseAPI, attendanceAPI, taskAPI, branchAPI } from '../services/api';
+import AppShell from '../components/AppShell';
 import './Dashboard.css';
 
 function Reports() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [branches, setBranches] = useState([]);
   const [selectedBranch, setSelectedBranch] = useState(user?.branchId ? String(user.branchId) : '');
@@ -101,13 +102,13 @@ function Reports() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const handleBranchChange = (e) => {
     setSelectedBranch(e.target.value);
+  };
+
+  const handleReportChange = (e) => {
+    setSelectedReport(e.target.value);
   };
 
   const handleDateChange = (e) => {
@@ -118,49 +119,19 @@ function Reports() {
     }
   };
 
-  const handleReportChange = (e) => {
-    setSelectedReport(e.target.value);
-  };
+  if (loading) {
+    return (
+      <AppShell pageTitle="Operational Audits">
+        <div className="loading">Generating report telemetry...</div>
+      </AppShell>
+    );
+  }
 
   const dashboardPath = user?.role === 'OWNER' ? '/owner-dashboard' : '/admin-dashboard';
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>SEMS</h1>
-          <span className="user-role">{user?.role} Dashboard</span>
-        </div>
-        <div className="header-right">
-          <span className="user-name">Welcome, {user?.name}</span>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
-        </div>
-      </header>
-
-      <div className="dashboard-content">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <Link to={dashboardPath} className="nav-item">Dashboard</Link>
-            {user?.role === 'OWNER' && <Link to="/branches" className="nav-item">Branches</Link>}
-            {user?.role === 'OWNER' && <Link to="/admins" className="nav-item">Admins</Link>}
-            {user?.role === 'OWNER' && <Link to="/owner-workers" className="nav-item">Workers</Link>}
-            {user?.role === 'ADMIN' && <Link to="/workers" className="nav-item">Workers</Link>}
-            <Link to="/tasks" className="nav-item">Tasks</Link>
-            <Link to="/attendance" className="nav-item">Attendance</Link>
-            <Link to="/shifts" className="nav-item">Shifts</Link>
-            <Link to="/inventory" className="nav-item">Inventory</Link>
-            <Link to="/billing" className="nav-item">Billing</Link>
-            <Link to="/expenses" className="nav-item">Expenses</Link>
-            <Link to="/sales" className="nav-item">Sales</Link>
-            <Link to="/logistics" className="nav-item">Logistics</Link>
-            <Link to="/ai-insights" className="nav-item">AI Insights</Link>
-            <Link to="/reports" className="nav-item active">Reports</Link>
-            <Link to="/settings" className="nav-item">Settings</Link>
-          </nav>
-        </aside>
-
-        <main className="main-content">
-          <div className="dashboard-header">
+    <AppShell pageTitle="Operational Audits">
+      <div className="dashboard-header">
             <h2>Reports</h2>
             <div>
               <button onClick={() => navigate(dashboardPath)} className="btn btn-secondary">Back to Dashboard</button>
@@ -364,9 +335,7 @@ function Reports() {
               <p>No report data available. Select a report type and date range to generate a report.</p>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </AppShell>
   );
 }
 

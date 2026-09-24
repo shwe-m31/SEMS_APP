@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { branchAPI, adminAPI } from '../services/api';
 import { BUSINESS_CATEGORIES, CATEGORY_LABELS } from '../constants/businessCategories';
+import AppShell from '../components/AppShell';
 import './Dashboard.css';
 
 function BranchManagement() {
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [branches, setBranches] = useState([]);
   const [admins, setAdmins] = useState([]);
@@ -45,10 +44,6 @@ function BranchManagement() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const handleCreate = () => {
     setEditingBranch(null);
@@ -130,44 +125,16 @@ function BranchManagement() {
   };
 
   if (loading) {
-    return <div className="loading">Loading branches...</div>;
+    return (
+      <AppShell pageTitle="Branch Management">
+        <div className="loading">Loading branches...</div>
+      </AppShell>
+    );
   }
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>SEMS</h1>
-          <span className="user-role">Owner Dashboard</span>
-        </div>
-        <div className="header-right">
-          <span className="user-name">Welcome, {user?.name}</span>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
-        </div>
-      </header>
-
-      <div className="dashboard-content">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <Link to="/owner-dashboard" className="nav-item">Dashboard</Link>
-            <Link to="/branches" className="nav-item active">Branches</Link>
-            <Link to="/admins" className="nav-item">Admins</Link>
-            <Link to="/owner-workers" className="nav-item">Workers</Link>
-            <Link to="/tasks" className="nav-item">Tasks</Link>
-            <Link to="/attendance" className="nav-item">Attendance</Link>
-            <Link to="/inventory" className="nav-item">Inventory</Link>
-            <Link to="/billing" className="nav-item">Billing</Link>
-            <Link to="/expenses" className="nav-item">Expenses</Link>
-            <Link to="/sales" className="nav-item">Sales</Link>
-            <Link to="/logistics" className="nav-item">Logistics</Link>
-            <Link to="/ai-insights" className="nav-item">AI Insights</Link>
-            <Link to="/reports" className="nav-item">Reports</Link>
-            <Link to="/settings" className="nav-item">Settings</Link>
-          </nav>
-        </aside>
-
-        <main className="main-content">
-          <div className="dashboard-header">
+    <AppShell pageTitle="Branch Management">
+      <div className="dashboard-header">
             <h2>Branch Management</h2>
             <div>
               <button onClick={() => navigate('/owner-dashboard')} className="btn btn-secondary" style={{ marginRight: '0.5rem' }}>Back to Dashboard</button>
@@ -270,8 +237,8 @@ function BranchManagement() {
                   )}
 
                   {!editingBranch && (
-                    <div style={{ marginBottom: '1rem', padding: '0.5rem 0.75rem', background: '#eff6ff', borderRadius: '4px', fontSize: '12px', color: '#1e40af' }}>
-                      ℹ️ A unique Branch Code (e.g. SEMS-CHN-001) will be automatically generated upon creation.
+                    <div style={{ marginBottom: '1rem', padding: '0.5rem 0.75rem', background: 'var(--accent-blue-soft, #eff6ff)', borderRadius: '4px', fontSize: '12px', color: 'var(--accent-blue, #1e40af)' }}>
+                      Note: A unique Branch Code (e.g. SEMS-CHN-001) will be automatically generated upon creation.
                     </div>
                   )}
 
@@ -373,9 +340,7 @@ function BranchManagement() {
               </div>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </AppShell>
   );
 }
 

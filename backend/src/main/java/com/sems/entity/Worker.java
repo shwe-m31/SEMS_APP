@@ -38,6 +38,19 @@ public class Worker {
 
     private String designation;
 
+    public WorkerDesignation getWorkerDesignation() {
+        return WorkerDesignation.fromString(this.designation);
+    }
+
+    public void setWorkerDesignation(WorkerDesignation workerDesignation) {
+        this.designation = workerDesignation != null ? workerDesignation.name() : null;
+    }
+
+    public String getDesignationLabel() {
+        WorkerDesignation wd = getWorkerDesignation();
+        return wd != null ? wd.getLabel() : (this.designation != null ? this.designation : "Worker");
+    }
+
     private BigDecimal salary;
 
     private LocalDate hireDate;

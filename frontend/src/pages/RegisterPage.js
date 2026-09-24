@@ -329,6 +329,11 @@ function RegisterPage() {
     <div className="register-page">
       <div className="register-container">
         <div className="register-header">
+          <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '8px' }}>
+            <Link to="/" style={{ fontSize: '18px', fontWeight: 700, letterSpacing: '-0.03em', color: 'var(--text-primary)' }}>
+              SEMS<span style={{ color: 'var(--accent-blue)' }}>•</span>
+            </Link>
+          </div>
           <h1>SEMS Onboarding</h1>
           <p>Smart Enterprise Management System</p>
         </div>
@@ -347,7 +352,7 @@ function RegisterPage() {
                 key={step.num} 
                 className={`step-pill ${currentStep === step.num ? 'active' : ''} ${currentStep > step.num ? 'completed' : ''}`}
               >
-                <div className="step-circle">{currentStep > step.num ? '✓' : step.num - 1}</div>
+                <div className="step-circle">{step.num - 1}</div>
                 <span className="step-title">{step.label}</span>
               </div>
             ))}
@@ -950,7 +955,7 @@ function RegisterPage() {
         {currentStep === 7 && createdSummary && (
           <div>
             <div className="success-banner">
-              <div className="success-icon">✓</div>
+              <span className="success-tag-badge">Setup Complete</span>
               <h2>Organization Created Successfully!</h2>
               <p>{createdSummary.organization?.name} has been set up with all branches and provisioned admins.</p>
             </div>

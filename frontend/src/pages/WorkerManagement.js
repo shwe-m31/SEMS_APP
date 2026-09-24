@@ -1,30 +1,44 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { workerAPI } from '../services/api';
+import AppShell from '../components/AppShell';
 import './Dashboard.css';
 
+const RESTAURANT_CATEGORIES = [
+  { value: 'CHEF', label: 'Chef' },
+  { value: 'KITCHEN_ASSISTANT', label: 'Kitchen Assistant' },
+  { value: 'WAITER', label: 'Waiter' },
+  { value: 'CASHIER', label: 'Cashier' },
+  { value: 'INVENTORY_WORKER', label: 'Inventory Worker' },
+  { value: 'DELIVERY_WORKER', label: 'Delivery Worker' },
+  { value: 'CLEANING_WORKER', label: 'Cleaning Worker' },
+];
+
 function WorkerManagement() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [workers, setWorkers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingWorker, setEditingWorker] = useState(null);
+  const [createdCredentials, setCreatedCredentials] = useState(null);
+  const [copiedField, setCopiedField] = useState(null);
   const [branchId, setBranchId] = useState(user?.branchId);
+
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     phone: '',
-    employeeId: '',
-    designation: '',
-    salary: '',
-    hireDate: '',
+    dateOfBirth: '',
+    gender: 'MALE',
+    designation: 'CHEF',
+    salary: '22000',
+    hireDate: new Date().toISOString().split('T')[0],
     status: 'ACTIVE'
   });
 
   useEffect(() => {
-    // Get branchId from user context if available
     if (user?.branchId) {
       setBranchId(user.branchId);
     }
@@ -37,15 +51,9 @@ function WorkerManagement() {
       setWorkers(response.data);
     } catch (error) {
       console.error('Error fetching workers:', error);
-      alert('Failed to fetch workers');
     } finally {
       setLoading(false);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
   };
 
   const handleCreate = () => {
@@ -54,10 +62,11 @@ function WorkerManagement() {
       name: '',
       email: '',
       phone: '',
-      employeeId: '',
-      designation: '',
-      salary: '',
-      hireDate: '',
+      dateOfBirth: '',
+      gender: 'MALE',
+      designation: 'CHEF',
+      salary: '22000',
+      hireDate: new Date().toISOString().split('T')[0],
       status: 'ACTIVE'
     });
     setShowModal(true);
@@ -69,9 +78,10 @@ function WorkerManagement() {
       name: worker.user?.name || '',
       email: worker.user?.email || '',
       phone: worker.user?.phone || '',
-      employeeId: worker.employeeId || '',
-      designation: worker.designation || '',
-      salary: worker.salary || '',
+      dateOfBirth: worker.user?.dateOfBirth || '',
+      gender: worker.user?.gender || 'MALE',
+      designation: worker.designation || 'CHEF',
+      salary: worker.salary || '22000',
       hireDate: worker.hireDate || '',
       status: worker.status || 'ACTIVE'
     });
@@ -79,10 +89,9 @@ function WorkerManagement() {
   };
 
   const handleDelete = async (workerId) => {
-    if (window.confirm('Are you sure you want to delete this worker?')) {
+    if (window.confirm('Are you sure you want to deactivate this worker?')) {
       try {
         await workerAPI.delete(workerId);
-        alert('Worker deleted successfully');
         fetchWorkers();
       } catch (error) {
         console.error('Error deleting worker:', error);
@@ -91,38 +100,73 @@ function WorkerManagement() {
     }
   };
 
+  const handleResetPassword = async (worker) => {
+    if (window.confirm(`Generate a new temporary password for ${worker.user?.name || worker.employeeId}?`)) {
+      try {
+        const res = await workerAPI.resetPassword(worker.id);
+        if (res.data && res.data.temporaryPassword) {
+          setCreatedCredentials({
+            name: res.data.worker?.name || worker.user?.name,
+            employeeId: res.data.worker?.employeeId || worker.employeeId,
+            username: res.data.worker?.username || worker.user?.username,
+            category: res.data.worker?.designationLabel || worker.designation,
+            temporaryPassword: res.data.temporaryPassword
+          });
+        }
+      } catch (err) {
+        alert('Failed to reset password: ' + (err.response?.data?.message || err.message));
+      }
+    }
+  };
+
+  const handleCopy = (text, fieldName) => {
+    if (navigator?.clipboard) {
+      navigator.clipboard.writeText(text);
+      setCopiedField(fieldName);
+      setTimeout(() => setCopiedField(null), 2500);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       if (editingWorker) {
         const workerData = {
-          employeeId: formData.employeeId,
+          employeeId: editingWorker.employeeId,
           designation: formData.designation,
           salary: parseFloat(formData.salary),
           hireDate: formData.hireDate ? formData.hireDate : null,
           status: formData.status
         };
         await workerAPI.update(editingWorker.id, workerData);
-        alert('Worker updated successfully');
+        setShowModal(false);
       } else {
         const workerData = {
-          employeeId: formData.employeeId,
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          dateOfBirth: formData.dateOfBirth,
+          gender: formData.gender,
           designation: formData.designation,
           salary: parseFloat(formData.salary),
-          hireDate: formData.hireDate ? formData.hireDate : null,
-          email: formData.email,
-          password: 'password123', // Default password for new workers
-          name: formData.name,
-          phone: formData.phone
+          hireDate: formData.hireDate
         };
-        await workerAPI.create(workerData);
-        alert('Worker created successfully');
+        const res = await workerAPI.create(workerData);
+        setShowModal(false);
+        if (res.data && res.data.temporaryPassword) {
+          setCreatedCredentials({
+            name: res.data.worker?.name || formData.name,
+            employeeId: res.data.worker?.employeeId,
+            username: res.data.worker?.username,
+            category: res.data.worker?.designationLabel || formData.designation,
+            temporaryPassword: res.data.temporaryPassword
+          });
+        }
       }
-      setShowModal(false);
       fetchWorkers();
     } catch (error) {
       console.error('Error saving worker:', error);
-      alert('Failed to save worker');
+      alert(error.response?.data?.message || 'Failed to save worker record');
     }
   };
 
@@ -134,175 +178,209 @@ function WorkerManagement() {
   };
 
   if (loading) {
-    return <div className="loading">Loading workers...</div>;
+    return (
+      <AppShell pageTitle="Worker Management">
+        <div className="loading">Loading staff directory...</div>
+      </AppShell>
+    );
   }
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>SEMS</h1>
-          <span className="user-role">Admin Dashboard</span>
+    <AppShell pageTitle="Worker Directory">
+      <div className="dashboard-header">
+        <div>
+          <h2>Worker Directory</h2>
+          <p className="page-lead" style={{ margin: '4px 0 0 0' }}>
+            Branch Operational Staff • Category Assignment & Access Credentials
+          </p>
         </div>
-        <div className="header-right">
-          <span className="user-name">Welcome, {user?.name}</span>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
+        <div>
+          <button onClick={handleCreate} className="btn btn-primary">Add Worker</button>
         </div>
-      </header>
+      </div>
 
-      <div className="dashboard-content">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <Link to="/admin-dashboard" className="nav-item">Dashboard</Link>
-            <Link to="/workers" className="nav-item active">Workers</Link>
-            <Link to="/tasks" className="nav-item">Tasks</Link>
-            <Link to="/attendance" className="nav-item">Attendance</Link>
-            <Link to="/shifts" className="nav-item">Shifts</Link>
-            <Link to="/inventory" className="nav-item">Inventory</Link>
-            <Link to="/billing" className="nav-item">Billing</Link>
-            <Link to="/expenses" className="nav-item">Expenses</Link>
-            <Link to="/logistics" className="nav-item">Logistics</Link>
-            <Link to="/sales" className="nav-item">Sales</Link>
-            <Link to="/ai-insights" className="nav-item">AI Insights</Link>
-            <Link to="/reports" className="nav-item">Reports</Link>
-            <Link to="/settings" className="nav-item">Settings</Link>
-          </nav>
-        </aside>
-
-        <main className="main-content">
-          <div className="dashboard-header">
-            <div>
-              <h2>Worker Management</h2>
-              {user?.branchCode && (
-                <p style={{ margin: 0, fontSize: '13px', color: '#64748b' }}>
-                  Branch: <strong>{user.branchName || 'Assigned Branch'}</strong> • Branch Code: <strong style={{ fontFamily: 'monospace', color: '#1d4ed8' }}>{user.branchCode}</strong>
-                </p>
-              )}
-            </div>
-            <div>
-              <button onClick={() => navigate('/admin-dashboard')} className="btn btn-secondary" style={{ marginRight: '0.5rem' }}>Back to Dashboard</button>
-              <button onClick={handleCreate} className="btn btn-primary">+ Add New Worker</button>
-            </div>
-          </div>
-
-          <div className="table-container">
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th>ID</th>
-                  <th>Name</th>
-                  <th>Email</th>
-                  <th>Employee ID</th>
-                  <th>Designation</th>
-                  <th>Salary</th>
-                  <th>Status</th>
-                  <th>Actions</th>
+      <div className="table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Staff Member</th>
+              <th>Category / Role</th>
+              <th>Username</th>
+              <th>Contact Phone</th>
+              <th>Status</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {workers.length === 0 ? (
+              <tr>
+                <td colSpan="7" style={{ textAlign: 'center', padding: '32px' }}>
+                  No workers assigned to this branch yet. Click "Add Worker" to onboard staff.
+                </td>
+              </tr>
+            ) : (
+              workers.map(worker => (
+                <tr key={worker.id}>
+                  <td>
+                    <span className="code-pill">{worker.employeeId || 'Pending'}</span>
+                  </td>
+                  <td>
+                    <strong>{worker.user?.name}</strong>
+                    <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>
+                      {worker.user?.email}
+                    </div>
+                  </td>
+                  <td>
+                    <span className="badge badge-info">
+                      {worker.designationLabel || worker.designation}
+                    </span>
+                  </td>
+                  <td>
+                    <span style={{ fontFamily: 'monospace', fontSize: '12px' }}>
+                      {worker.user?.username || '—'}
+                    </span>
+                  </td>
+                  <td>{worker.user?.phone || '—'}</td>
+                  <td>
+                    <span className={`status-pill ${worker.status === 'ACTIVE' ? 'status-active' : 'status-inactive'}`}>
+                      ● {worker.status}
+                    </span>
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <div style={{ display: 'inline-flex', gap: '8px' }}>
+                      <button
+                        onClick={() => handleResetPassword(worker)}
+                        className="btn btn-sm btn-secondary"
+                        title="Generate new temporary password"
+                      >
+                        Reset Password
+                      </button>
+                      <button
+                        onClick={() => handleEdit(worker)}
+                        className="btn btn-sm btn-secondary"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        onClick={() => handleDelete(worker.id)}
+                        className="btn btn-sm btn-danger"
+                      >
+                        Deactivate
+                      </button>
+                    </div>
+                  </td>
                 </tr>
-              </thead>
-              <tbody>
-                {workers.map(worker => (
-                  <tr key={worker.id}>
-                    <td>{worker.id}</td>
-                    <td>{worker.user?.name}</td>
-                    <td>{worker.user?.email}</td>
-                    <td>{worker.employeeId}</td>
-                    <td>{worker.designation}</td>
-                    <td>₹{worker.salary}</td>
-                    <td>
-                      <span className={`status-badge ${worker.status === 'ACTIVE' ? 'active' : 'inactive'}`}>
-                        {worker.status}
-                      </span>
-                    </td>
-                    <td>
-                      <button onClick={() => handleEdit(worker)} className="btn btn-sm btn-secondary">Edit</button>
-                      <button onClick={() => handleDelete(worker.id)} className="btn btn-sm btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
 
-          {showModal && (
-            <div className="modal">
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h3>{editingWorker ? 'Edit Worker' : 'Add New Worker'}</h3>
-                  <button onClick={() => setShowModal(false)} className="close-button">&times;</button>
+      {/* CREATE / EDIT WORKER MODAL */}
+      {showModal && (
+        <div className="modal">
+          <div className="modal-content" style={{ maxWidth: '640px' }}>
+            <div className="modal-header">
+              <h3>{editingWorker ? 'Edit Worker Profile' : 'Onboard New Worker'}</h3>
+              <button onClick={() => setShowModal(false)} className="close-button">&times;</button>
+            </div>
+            <form onSubmit={handleSubmit}>
+              <div className="form-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div className="form-group" style={{ gridColumn: 'span 2' }}>
+                  <label>Full Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="e.g. Rahul Kumar"
+                  />
                 </div>
-                <form onSubmit={handleSubmit}>
-                  {!editingWorker && (
-                    <>
-                      <div className="form-group">
-                        <label>Name *</label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Email *</label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleInputChange}
-                          required
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Phone</label>
-                        <input
-                          type="text"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                    </>
-                  )}
-                  <div className="form-group">
-                    <label>Employee ID *</label>
-                    <input
-                      type="text"
-                      name="employeeId"
-                      value={formData.employeeId}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Designation *</label>
-                    <input
-                      type="text"
-                      name="designation"
-                      value={formData.designation}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Salary *</label>
-                    <input
-                      type="number"
-                      name="salary"
-                      value={formData.salary}
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Hire Date</label>
-                    <input
-                      type="date"
-                      name="hireDate"
-                      value={formData.hireDate}
-                      onChange={handleInputChange}
-                    />
-                  </div>
+
+                <div className="form-group">
+                  <label>Worker Category / Role *</label>
+                  <select
+                    name="designation"
+                    value={formData.designation}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    {RESTAURANT_CATEGORIES.map(cat => (
+                      <option key={cat.value} value={cat.value}>{cat.label}</option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Monthly Salary (₹) *</label>
+                  <input
+                    type="number"
+                    name="salary"
+                    value={formData.salary}
+                    onChange={handleInputChange}
+                    required
+                    min="1000"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Phone Number</label>
+                  <input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    placeholder="+91 XXXXX XXXXX"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Email Address</label>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    placeholder="optional (auto-generated if empty)"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Date of Birth</label>
+                  <input
+                    type="date"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Gender</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleInputChange}
+                  >
+                    <option value="MALE">Male</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="OTHER">Other</option>
+                  </select>
+                </div>
+
+                <div className="form-group">
+                  <label>Joining Date</label>
+                  <input
+                    type="date"
+                    name="hireDate"
+                    value={formData.hireDate}
+                    onChange={handleInputChange}
+                  />
+                </div>
+
+                {editingWorker && (
                   <div className="form-group">
                     <label>Status</label>
                     <select
@@ -315,19 +393,107 @@ function WorkerManagement() {
                       <option value="TERMINATED">Terminated</option>
                     </select>
                   </div>
-                  <div className="form-actions">
-                    <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">Cancel</button>
-                    <button type="submit" className="btn btn-primary">
-                      {editingWorker ? 'Update Worker' : 'Create Worker'}
+                )}
+              </div>
+
+              {!editingWorker && (
+                <div style={{ marginTop: '16px', padding: '10px 14px', background: 'var(--accent-blue-soft)', borderRadius: 'var(--radius-sm)', fontSize: '12px', color: 'var(--accent-blue)' }}>
+                  Note: Worker will be bound to your assigned branch automatically. Unique Employee ID, username, and temporary password will be generated upon creation.
+                </div>
+              )}
+
+              <div className="form-actions" style={{ marginTop: '20px' }}>
+                <button type="button" onClick={() => setShowModal(false)} className="btn btn-secondary">
+                  Cancel
+                </button>
+                <button type="submit" className="btn btn-primary">
+                  {editingWorker ? 'Update Worker' : 'Create Worker & Generate Credentials'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* CREDENTIALS CONFIRMATION MODAL */}
+      {createdCredentials && (
+        <div className="modal">
+          <div className="modal-content" style={{ maxWidth: '520px' }}>
+            <div className="modal-header">
+              <h3 style={{ color: 'var(--success)' }}>Worker Created Successfully</h3>
+              <button onClick={() => setCreatedCredentials(null)} className="close-button">&times;</button>
+            </div>
+
+            <div style={{ padding: '0.5rem 0' }}>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
+                Share these temporary login credentials with <strong>{createdCredentials.name}</strong>:
+              </p>
+
+              <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: 'var(--radius-md)', padding: '16px', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Employee ID:</span>
+                  <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--text-primary)' }}>
+                    {createdCredentials.employeeId}
+                  </span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Worker Category:</span>
+                  <span className="badge badge-info">{createdCredentials.category}</span>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Username:</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--accent-blue)' }}>
+                      {createdCredentials.username}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => handleCopy(createdCredentials.username, 'uname')}
+                    >
+                      {copiedField === 'uname' ? 'Copied' : 'Copy'}
                     </button>
                   </div>
-                </form>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Temporary Password:</span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <span style={{ fontFamily: 'monospace', fontWeight: 700, background: 'var(--bg-surface)', border: '1px solid var(--border-medium)', padding: '2px 8px', borderRadius: '4px' }}>
+                      {createdCredentials.temporaryPassword}
+                    </span>
+                    <button
+                      type="button"
+                      className="btn btn-sm btn-secondary"
+                      onClick={() => handleCopy(createdCredentials.temporaryPassword, 'pwd')}
+                    >
+                      {copiedField === 'pwd' ? 'Copied' : 'Copy'}
+                    </button>
+                  </div>
+                </div>
               </div>
+
+              <p style={{ fontSize: '12px', color: 'var(--warning)', background: 'var(--warning-bg)', padding: '8px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--warning)' }}>
+                Note: The worker must sign in with their Username and Temporary Password. They will be required to create a permanent password on first login before accessing their console.
+              </p>
             </div>
-          )}
-        </main>
-      </div>
-    </div>
+
+            <div className="form-actions" style={{ marginTop: '1rem' }}>
+              <button
+                type="button"
+                onClick={() => setCreatedCredentials(null)}
+                className="btn btn-primary"
+                style={{ width: '100%' }}
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </AppShell>
   );
 }
 

@@ -100,6 +100,7 @@ public class AdminService {
         admin.setUser(savedUser);
         admin.setBranch(branch);
         admin.setDesignation(designation != null && !designation.trim().isEmpty() ? designation.trim() : "Branch Admin");
+        admin.setTemporaryPassword(tempPassword);
         Admin savedAdmin = adminRepository.save(admin);
 
         Map<String, Object> result = new HashMap<>();
@@ -107,6 +108,32 @@ public class AdminService {
         result.put("branchCode", branch.getBranchCode());
         result.put("temporaryPassword", tempPassword);
         return result;
+    }
+
+    @Transactional
+    public Map<String, Object> resetAdminPassword(Long id) {
+        Admin admin = adminRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Admin not found"));
+        User user = admin.getUser();
+        if (user == null) {
+            throw new RuntimeException("User account not found for admin");
+        }
+        String newTempPassword = passwordGenerator.generateTemporaryPassword();
+        user.setPassword(passwordEncoder.encode(newTempPassword));
+        user.setMustChangePassword(true);
+        userRepository.save(user);
+
+        admin.setTemporaryPassword(newTempPassword);
+        adminRepository.save(admin);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("adminId", admin.getId());
+        response.put("name", user.getName());
+        response.put("username", user.getUsername());
+        response.put("temporaryPassword", newTempPassword);
+        response.put("message", "Password reset successfully. Hand over the temporary password to the admin.");
+        return response;
     }
 
     @Transactional

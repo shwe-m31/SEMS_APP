@@ -66,4 +66,14 @@ public class AdminController {
         adminService.deleteAdmin(id);
         return ResponseEntity.ok(Map.of("success", true));
     }
+
+    @PostMapping("/{id}/reset-password")
+    @PreAuthorize("hasRole('OWNER')")
+    public ResponseEntity<?> resetAdminPassword(@PathVariable Long id) {
+        try {
+            return ResponseEntity.ok(adminService.resetAdminPassword(id));
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(Map.of("message", e.getMessage()));
+        }
+    }
 }

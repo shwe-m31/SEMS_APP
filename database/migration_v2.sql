@@ -24,3 +24,8 @@ ALTER TABLE branches
 ALTER TABLE organizations 
     ADD COLUMN category VARCHAR(100) AFTER industry_type,
     ADD COLUMN sub_category VARCHAR(100) AFTER category;
+
+-- 4. ADMINS TABLE
+ALTER TABLE admins 
+    ADD COLUMN temporary_password VARCHAR(255) AFTER designation;
+

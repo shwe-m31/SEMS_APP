@@ -57,6 +57,7 @@ export const workerAPI = {
   create: (workerData) => api.post('/workers', workerData),
   update: (id, worker) => api.put(`/workers/${id}`, worker),
   delete: (id) => api.delete(`/workers/${id}`),
+  resetPassword: (id) => api.post(`/workers/${id}/reset-password`),
 };
 
 // Admin API
@@ -66,6 +67,7 @@ export const adminAPI = {
   create: (adminData) => api.post('/admins', adminData),
   update: (id, admin) => api.put(`/admins/${id}`, admin),
   delete: (id) => api.delete(`/admins/${id}`),
+  resetPassword: (id) => api.post(`/admins/${id}/reset-password`),
 };
 
 // Task API
@@ -165,6 +167,20 @@ export const workerShiftAPI = {
   getAll: () => api.get('/worker-shifts'),
   create: (assignmentData) => api.post('/worker-shifts', assignmentData),
   delete: (id) => api.delete(`/worker-shifts/${id}`),
+};
+
+// Restaurant Order & Operations API
+export const restaurantAPI = {
+  getOrders: () => api.get('/restaurant/orders'),
+  getMenu: () => api.get('/restaurant/menu'),
+  createOrder: (orderData) => api.post('/restaurant/orders', orderData),
+  acceptOrder: (id) => api.post(`/restaurant/orders/${id}/accept`),
+  startOrder: (id) => api.post(`/restaurant/orders/${id}/start`),
+  readyOrder: (id) => api.post(`/restaurant/orders/${id}/ready`),
+  serveOrder: (id) => api.post(`/restaurant/orders/${id}/serve`),
+  payOrder: (id, paymentData) => api.post(`/restaurant/orders/${id}/pay`, paymentData),
+  reportIssue: (issueData) => api.post('/restaurant/issues', issueData),
+  getIssues: () => api.get('/restaurant/issues'),
 };
 
 export default api;

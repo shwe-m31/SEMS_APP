@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { branchAPI, adminAPI } from '../services/api';
+import AppShell from '../components/AppShell';
 import './Dashboard.css';
 
 function AdminManagement() {
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [admins, setAdmins] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -14,6 +13,14 @@ function AdminManagement() {
   const [editingAdmin, setEditingAdmin] = useState(null);
   const [createdCredentials, setCreatedCredentials] = useState(null);
   const [copiedField, setCopiedField] = useState(null);
+  const [visiblePasswords, setVisiblePasswords] = useState({});
+
+  const togglePasswordVisibility = (adminId) => {
+    setVisiblePasswords(prev => {
+      const isCurrentlyVisible = prev[adminId] !== false;
+      return { ...prev, [adminId]: !isCurrentlyVisible };
+    });
+  };
 
   const [formData, setFormData] = useState({
     name: '',
@@ -49,10 +56,6 @@ function AdminManagement() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const handleCreate = () => {
     setEditingAdmin(null);
@@ -128,6 +131,25 @@ function AdminManagement() {
     }
   };
 
+  const handleResetPassword = async (admin) => {
+    if (!window.confirm(`Generate and reset a new temporary claim password for Admin ${admin.user?.name} (${admin.branch?.name})?`)) {
+      return;
+    }
+    try {
+      const response = await adminAPI.resetPassword(admin.id);
+      fetchAdmins();
+      setCreatedCredentials({
+        name: admin.user?.name,
+        email: admin.user?.email,
+        username: response.data?.username || admin.user?.username,
+        branchCode: admin.branch?.branchCode || 'N/A',
+        temporaryPassword: response.data?.temporaryPassword || 'N/A'
+      });
+    } catch (error) {
+      alert('Failed to reset password: ' + (error.response?.data?.message || error.message));
+    }
+  };
+
   const handleInputChange = (e) => {
     setFormData({
       ...formData,
@@ -142,44 +164,16 @@ function AdminManagement() {
   };
 
   if (loading) {
-    return <div className="loading">Loading admins...</div>;
+    return (
+      <AppShell pageTitle="Admin Management">
+        <div className="loading">Loading admins...</div>
+      </AppShell>
+    );
   }
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>SEMS</h1>
-          <span className="user-role">Owner Dashboard</span>
-        </div>
-        <div className="header-right">
-          <span className="user-name">Welcome, {user?.name}</span>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
-        </div>
-      </header>
-
-      <div className="dashboard-content">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <Link to="/owner-dashboard" className="nav-item">Dashboard</Link>
-            <Link to="/branches" className="nav-item">Branches</Link>
-            <Link to="/admins" className="nav-item active">Admins</Link>
-            <Link to="/owner-workers" className="nav-item">Workers</Link>
-            <Link to="/tasks" className="nav-item">Tasks</Link>
-            <Link to="/attendance" className="nav-item">Attendance</Link>
-            <Link to="/inventory" className="nav-item">Inventory</Link>
-            <Link to="/billing" className="nav-item">Billing</Link>
-            <Link to="/expenses" className="nav-item">Expenses</Link>
-            <Link to="/sales" className="nav-item">Sales</Link>
-            <Link to="/logistics" className="nav-item">Logistics</Link>
-            <Link to="/ai-insights" className="nav-item">AI Insights</Link>
-            <Link to="/reports" className="nav-item">Reports</Link>
-            <Link to="/settings" className="nav-item">Settings</Link>
-          </nav>
-        </aside>
-
-        <main className="main-content">
-          <div className="dashboard-header">
+    <AppShell pageTitle="Admin Management">
+      <div className="dashboard-header">
             <h2>Admin Management</h2>
             <div>
               <button onClick={() => navigate('/owner-dashboard')} className="btn btn-secondary" style={{ marginRight: '0.5rem' }}>Back to Dashboard</button>
@@ -193,46 +187,84 @@ function AdminManagement() {
                 <tr>
                   <th>Admin Name</th>
                   <th>Email</th>
-                  <th>Phone</th>
+                  <th>Username</th>
                   <th>Branch</th>
                   <th>Branch Code</th>
                   <th>Designation</th>
+                  <th>Admin Password (Claim)</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {admins.map(admin => (
-                  <tr key={admin.id}>
-                    <td><strong>{admin.user?.name}</strong></td>
-                    <td>{admin.user?.email}</td>
-                    <td>{admin.user?.phone || '—'}</td>
-                    <td>{admin.branch?.name || '—'}</td>
-                    <td>
-                      <span style={{
-                        fontFamily: 'monospace',
-                        fontWeight: 700,
-                        color: '#1d4ed8',
-                        background: '#eff6ff',
-                        padding: '3px 8px',
-                        borderRadius: '4px',
-                        border: '1px solid #bfdbfe'
-                      }}>
-                        {admin.branch?.branchCode || '—'}
-                      </span>
-                    </td>
-                    <td>{admin.designation || 'Admin'}</td>
-                    <td>
-                      <span className={`status-badge ${admin.user?.mustChangePassword ? 'pending' : 'active'}`}>
-                        {admin.user?.mustChangePassword ? 'Pending 1st Login' : 'Active'}
-                      </span>
-                    </td>
-                    <td>
-                      <button onClick={() => handleEdit(admin)} className="btn btn-sm btn-secondary" style={{ marginRight: '0.25rem' }}>Edit</button>
-                      <button onClick={() => handleDelete(admin.id)} className="btn btn-sm btn-danger">Delete</button>
-                    </td>
-                  </tr>
-                ))}
+                {admins.map(admin => {
+                  const isVisible = visiblePasswords[admin.id] !== false;
+                  const displayPassword = admin.temporaryPassword || 'password123';
+                  return (
+                    <tr key={admin.id}>
+                      <td><strong>{admin.user?.name}</strong></td>
+                      <td>{admin.user?.email}</td>
+                      <td>
+                        <span className="code-pill">
+                          {admin.user?.username || '—'}
+                        </span>
+                      </td>
+                      <td>{admin.branch?.name || '—'}</td>
+                      <td>
+                        <span className="code-pill">
+                          {admin.branch?.branchCode || '—'}
+                        </span>
+                      </td>
+                      <td>{admin.designation || 'Admin'}</td>
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                          <span style={{
+                            fontFamily: 'monospace',
+                            fontWeight: 700,
+                            fontSize: '12px',
+                            letterSpacing: isVisible ? '0.02em' : '0.14em',
+                            background: 'var(--bg-secondary)',
+                            padding: '3px 6px',
+                            borderRadius: 'var(--radius-sm)',
+                            border: '1px solid var(--border-subtle)',
+                            minWidth: '85px',
+                            textAlign: 'center'
+                          }}>
+                            {isVisible ? displayPassword : '••••••••'}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => togglePasswordVisibility(admin.id)}
+                            className="btn btn-sm btn-secondary"
+                            style={{ padding: '2px 6px', fontSize: '10px' }}
+                          >
+                            {isVisible ? 'Hide' : 'Show'}
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleCopy(displayPassword, `pwd-${admin.id}`)}
+                            className="btn btn-sm btn-secondary"
+                            style={{ padding: '2px 6px', fontSize: '10px' }}
+                          >
+                            {copiedField === `pwd-${admin.id}` ? 'Copied' : 'Copy'}
+                          </button>
+                        </div>
+                      </td>
+                      <td>
+                        <span className={`status-badge ${admin.user?.mustChangePassword ? 'pending' : 'active'}`}>
+                          {admin.user?.mustChangePassword ? 'Pending 1st Login' : 'Active'}
+                        </span>
+                      </td>
+                      <td>
+                        <div style={{ display: 'flex', gap: '4px' }}>
+                          <button onClick={() => handleEdit(admin)} className="btn btn-sm btn-secondary">Edit</button>
+                          <button onClick={() => handleResetPassword(admin)} className="btn btn-sm btn-secondary" style={{ color: 'var(--accent-blue)' }}>Reset Pwd</button>
+                          <button onClick={() => handleDelete(admin.id)} className="btn btn-sm btn-danger">Delete</button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -280,8 +312,8 @@ function AdminManagement() {
                           placeholder="+91 XXXXX XXXXX"
                         />
                       </div>
-                      <div style={{ marginBottom: '1rem', padding: '0.6rem 0.8rem', background: '#eff6ff', borderRadius: '4px', fontSize: '12px', color: '#1e40af' }}>
-                        ℹ️ A secure temporary password will be automatically generated by the server. The Admin will be prompted to set a permanent password upon first login.
+                      <div style={{ marginBottom: '1rem', padding: '0.6rem 0.8rem', background: 'var(--accent-blue-soft, #eff6ff)', borderRadius: '4px', fontSize: '12px', color: 'var(--accent-blue, #1e40af)' }}>
+                        Note: A secure temporary password will be automatically generated by the server. The Admin will be prompted to set a permanent password upon first login.
                       </div>
                     </>
                   ) : (
@@ -335,24 +367,42 @@ function AdminManagement() {
             <div className="modal">
               <div className="modal-content" style={{ maxWidth: '500px' }}>
                 <div className="modal-header">
-                  <h3 style={{ color: '#065f46' }}>✓ Admin Account Created</h3>
-                  <button onClick={() => setCreatedCredentials(null)} className="close-button">&times;</button>
+                  <h3 style={{ color: 'var(--text-primary)' }}>Admin Account Credentials</h3>
+                  <button onClick={() => setCreatedCredentials(null)} className="close-button">x</button>
                 </div>
 
                 <div style={{ padding: '0.5rem 0' }}>
-                  <p style={{ fontSize: '13px', color: '#475569', marginBottom: '1rem' }}>
+                  <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '1rem' }}>
                     Share these temporary login credentials with <strong>{createdCredentials.name}</strong>:
                   </p>
 
-                  <div style={{ background: '#f8fafc', border: '1px solid #e2e8f0', borderRadius: '6px', padding: '1rem', marginBottom: '1.25rem' }}>
+                  <div style={{ background: 'var(--bg-secondary)', border: '1px solid var(--border-subtle)', borderRadius: '6px', padding: '1rem', marginBottom: '1.25rem' }}>
+                    {createdCredentials.username && (
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Username:</span>
+                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                          <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--accent-blue)' }}>{createdCredentials.username}</span>
+                          <button 
+                            type="button" 
+                            onClick={() => handleCopy(createdCredentials.username, 'uname')}
+                            style={{ marginLeft: '0.5rem', padding: '2px 6px', fontSize: '11px', cursor: 'pointer' }}
+                            className="btn btn-sm btn-secondary"
+                          >
+                            {copiedField === 'uname' ? 'Copied!' : 'Copy'}
+                          </button>
+                        </div>
+                      </div>
+                    )}
+
                     <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                      <span style={{ fontSize: '12px', color: '#64748b' }}>Branch Code:</span>
+                      <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Branch Code:</span>
                       <div style={{ display: 'flex', alignItems: 'center' }}>
-                        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#1d4ed8' }}>{createdCredentials.branchCode}</span>
+                        <span style={{ fontFamily: 'monospace', fontWeight: 700, color: 'var(--accent-blue)' }}>{createdCredentials.branchCode}</span>
                         <button 
                           type="button" 
                           onClick={() => handleCopy(createdCredentials.branchCode, 'code')}
                           style={{ marginLeft: '0.5rem', padding: '2px 6px', fontSize: '11px', cursor: 'pointer' }}
+                          className="btn btn-sm btn-secondary"
                         >
                           {copiedField === 'code' ? 'Copied!' : 'Copy'}
                         </button>
@@ -376,8 +426,8 @@ function AdminManagement() {
                     </div>
                   </div>
 
-                  <p style={{ fontSize: '12px', color: '#b45309', background: '#fffbeb', padding: '0.5rem 0.75rem', borderRadius: '4px', border: '1px solid #fde68a' }}>
-                    ⚠️ The Admin must use these credentials to sign in under <strong>Admin Sign In</strong> and will be forced to create a permanent password upon first login.
+                  <p style={{ fontSize: '12px', color: 'var(--warning)', background: 'var(--warning-bg)', padding: '0.5rem 0.75rem', borderRadius: 'var(--radius-sm)', border: '1px solid var(--warning)' }}>
+                    Note: The Admin must use these credentials to sign in under <strong>Admin Sign In</strong> and will be forced to create a permanent password upon first login.
                   </p>
                 </div>
 
@@ -389,9 +439,7 @@ function AdminManagement() {
               </div>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </AppShell>
   );
 }
 

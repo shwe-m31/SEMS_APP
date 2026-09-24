@@ -31,8 +31,8 @@ INSERT INTO users (email, password, name, phone, date_of_birth, gender, role) VA
 ON DUPLICATE KEY UPDATE name='Priya';
 
 -- INSERT ADMIN (Manager) mapping to branch
-INSERT INTO admins (user_id, branch_id, designation) VALUES
-(2, 1, 'Branch Manager')
+INSERT INTO admins (user_id, branch_id, designation, temporary_password) VALUES
+(2, 1, 'Branch Manager', 'password')
 ON DUPLICATE KEY UPDATE designation='Branch Manager';
 
 -- INSERT WORKER USER

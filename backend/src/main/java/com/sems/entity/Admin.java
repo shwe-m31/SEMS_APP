@@ -33,6 +33,9 @@ public class Admin {
 
     private String designation;
 
+    @Column(name = "temporary_password")
+    private String temporaryPassword;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

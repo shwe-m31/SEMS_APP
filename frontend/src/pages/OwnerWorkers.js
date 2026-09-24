@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { branchAPI, workerAPI } from '../services/api';
+import AppShell from '../components/AppShell';
 import './Dashboard.css';
 
 function OwnerWorkers() {
-  const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [workers, setWorkers] = useState([]);
   const [branches, setBranches] = useState([]);
@@ -50,54 +49,22 @@ function OwnerWorkers() {
     }
   };
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const handleBranchFilter = (e) => {
     setSelectedBranch(e.target.value);
   };
 
   if (loading) {
-    return <div className="loading">Loading workers...</div>;
+    return (
+      <AppShell pageTitle="Workforce Directory">
+        <div className="loading">Loading workers...</div>
+      </AppShell>
+    );
   }
 
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>SEMS</h1>
-          <span className="user-role">Owner Dashboard</span>
-        </div>
-        <div className="header-right">
-          <span className="user-name">Welcome, {user?.name}</span>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
-        </div>
-      </header>
-
-      <div className="dashboard-content">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <Link to="/owner-dashboard" className="nav-item">Dashboard</Link>
-            <Link to="/branches" className="nav-item">Branches</Link>
-            <Link to="/admins" className="nav-item">Admins</Link>
-            <Link to="/owner-workers" className="nav-item active">Workers</Link>
-            <Link to="/tasks" className="nav-item">Tasks</Link>
-            <Link to="/attendance" className="nav-item">Attendance</Link>
-            <Link to="/inventory" className="nav-item">Inventory</Link>
-            <Link to="/billing" className="nav-item">Billing</Link>
-            <Link to="/expenses" className="nav-item">Expenses</Link>
-            <Link to="/sales" className="nav-item">Sales</Link>
-            <Link to="/logistics" className="nav-item">Logistics</Link>
-            <Link to="/ai-insights" className="nav-item">AI Insights</Link>
-            <Link to="/reports" className="nav-item">Reports</Link>
-            <Link to="/settings" className="nav-item">Settings</Link>
-          </nav>
-        </aside>
-
-        <main className="main-content">
-          <div className="dashboard-header">
+    <AppShell pageTitle="Workforce Directory">
+      <div className="dashboard-header">
             <h2>Worker Management</h2>
             <div>
               <button onClick={() => navigate('/owner-dashboard')} className="btn btn-secondary">Back to Dashboard</button>
@@ -156,9 +123,7 @@ function OwnerWorkers() {
               <p>No workers found.</p>
             </div>
           )}
-        </main>
-      </div>
-    </div>
+    </AppShell>
   );
 }
 

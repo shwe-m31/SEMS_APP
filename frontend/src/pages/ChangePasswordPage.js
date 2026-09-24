@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import './LoginPage.css';
 
-function ChangePasswordPage() {
+export default function ChangePasswordPage() {
   const { user, changePassword, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const [currentPassword, setCurrentPassword] = useState('');
@@ -45,9 +47,9 @@ function ChangePasswordPage() {
       setSuccess(true);
       setTimeout(() => {
         const roleDashboardMap = {
-          'OWNER': '/owner-dashboard',
-          'ADMIN': '/admin-dashboard',
-          'WORKER': '/worker-dashboard'
+          OWNER: '/owner-dashboard',
+          ADMIN: '/admin-dashboard',
+          WORKER: '/worker-dashboard'
         };
         navigate(roleDashboardMap[user?.role] || '/');
       }, 1500);
@@ -60,36 +62,51 @@ function ChangePasswordPage() {
   };
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-header">
-          <h1>Create New Password</h1>
+    <div className="auth-page" style={{ alignItems: 'center', justifyContent: 'center', padding: '40px 20px' }}>
+      <div className="auth-center-container">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <Link to="/" className="auth-brand-title">
+            SEMS<span className="brand-dot">•</span>
+          </Link>
+          <button
+            type="button"
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+            aria-label="Toggle theme"
+          >
+            {theme === 'dark' ? 'Light' : 'Dark'}
+          </button>
+        </div>
+
+        <div className="auth-form-header">
+          <h2>Create Permanent Password</h2>
           <p>
-            {user?.mustChangePassword 
-              ? 'Please change your temporary password before accessing the system.' 
-              : 'Update your account password'}
+            {user?.mustChangePassword
+              ? 'Please change your temporary password before accessing the enterprise console.'
+              : 'Update your account security credentials.'}
           </p>
         </div>
 
-        {error && <div className="error-message">{error}</div>}
+        {error && <div className="auth-error-alert">{error}</div>}
         {success && (
-          <div style={{
-            marginBottom: '1rem',
-            padding: '0.75rem 1rem',
-            borderRadius: '4px',
-            background: '#ecfdf5',
-            border: '1px solid #10b981',
-            color: '#065f46',
-            textAlign: 'center',
-            fontSize: '13px',
-            fontWeight: 500
-          }}>
-            Password changed successfully! Redirecting to dashboard...
+          <div
+            style={{
+              padding: '10px 14px',
+              borderRadius: 'var(--radius-sm)',
+              backgroundColor: 'var(--success-bg)',
+              border: '1px solid var(--success)',
+              color: 'var(--success)',
+              fontSize: '13px',
+              fontWeight: 500,
+              textAlign: 'center'
+            }}
+          >
+            Password changed successfully. Redirecting to dashboard...
           </div>
         )}
 
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="form-group">
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="form-field-group">
             <label htmlFor="current-password">Current / Temporary Password *</label>
             <input
               type="password"
@@ -102,7 +119,7 @@ function ChangePasswordPage() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-field-group">
             <label htmlFor="new-password">New Password *</label>
             <input
               type="password"
@@ -116,7 +133,7 @@ function ChangePasswordPage() {
             />
           </div>
 
-          <div className="form-group">
+          <div className="form-field-group">
             <label htmlFor="confirm-new-password">Confirm New Password *</label>
             <input
               type="password"
@@ -129,35 +146,31 @@ function ChangePasswordPage() {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary" disabled={loading || success}>
-            {loading ? 'Updating Password...' : 'Set Permanent Password'}
+          <button type="submit" className="btn btn-primary" disabled={loading || success} style={{ width: '100%' }}>
+            {loading ? 'Updating Credentials...' : 'Save New Password'}
           </button>
         </form>
 
-        <div className="login-footer">
-          <p>
-            <button 
-              type="button" 
-              onClick={() => {
-                logout();
-                navigate('/login');
-              }}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#64748b',
-                cursor: 'pointer',
-                fontSize: '12px',
-                textDecoration: 'underline'
-              }}
-            >
-              Sign out and return to Login
-            </button>
-          </p>
+        <div className="auth-form-footer">
+          <button
+            type="button"
+            onClick={() => {
+              logout();
+              navigate('/login');
+            }}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'var(--text-secondary)',
+              cursor: 'pointer',
+              fontSize: '12px',
+              textDecoration: 'underline'
+            }}
+          >
+            Sign out and return to Login
+          </button>
         </div>
       </div>
     </div>
   );
 }
-
-export default ChangePasswordPage;

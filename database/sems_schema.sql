@@ -96,6 +96,7 @@ CREATE TABLE admins (
     user_id BIGINT NOT NULL,
     branch_id BIGINT NOT NULL,
     designation VARCHAR(100),
+    temporary_password VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,

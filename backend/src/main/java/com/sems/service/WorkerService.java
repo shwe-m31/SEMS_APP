@@ -1,10 +1,8 @@
 package com.sems.service;
 
-import com.sems.entity.Admin;
-import com.sems.entity.Branch;
-import com.sems.entity.Organization;
-import com.sems.entity.User;
-import com.sems.entity.Worker;
+import com.sems.dto.WorkerCreationRequest;
+import com.sems.dto.WorkerCreationResponse;
+import com.sems.entity.*;
 import com.sems.repository.AdminRepository;
 import com.sems.repository.BranchRepository;
 import com.sems.repository.OrganizationRepository;
@@ -19,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -60,32 +59,122 @@ public class WorkerService {
     public Worker getWorkerById(Long id) {
         return workerRepository.findById(id).orElse(null);
     }
+
+    @Transactional
+    public WorkerCreationResponse createWorkerWithCredentials(WorkerCreationRequest request) {
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            throw new AccessDeniedException("User not authenticated");
+        }
+
+        Branch targetBranch = resolveTargetBranch(currentUserId, request.getBranchId());
+        if (targetBranch == null) {
+            throw new AccessDeniedException("Unauthorized: Cannot assign worker to specified branch");
+        }
+
+        // 1. Generate unique Employee ID (e.g. A2Z-ERD-W001)
+        String employeeId = generateUniqueEmployeeId(targetBranch);
+
+        // 2. Generate unique Username (e.g. rahul.a2zerd)
+        String workerUsername = generateWorkerUsername(request.getName(), targetBranch.getBranchCode());
+
+        // 3. Normalize Designation
+        WorkerDesignation designation = WorkerDesignation.fromString(request.getDesignation());
+        String designationStr = designation != null ? designation.name() : (request.getDesignation() != null ? request.getDesignation().trim() : "WORKER");
+
+        // 4. Generate temporary password & hash
+        String temporaryPassword = passwordGenerator.generateTemporaryPassword();
+
+        // 5. Create and save User
+        User user = new User();
+        user.setUsername(workerUsername);
+        String email = (request.getEmail() != null && !request.getEmail().trim().isEmpty())
+                ? request.getEmail().trim().toLowerCase()
+                : workerUsername + "@" + (targetBranch.getBranchCode() != null ? targetBranch.getBranchCode().toLowerCase().replace("-", "") : "sems") + ".local";
+
+        // Avoid duplicate email collision if auto-generated
+        if (userRepository.existsByEmail(email)) {
+            email = workerUsername + "_" + System.currentTimeMillis() + "@sems.local";
+        }
+
+        user.setEmail(email);
+        user.setPassword(passwordEncoder.encode(temporaryPassword));
+        user.setName(request.getName() != null ? request.getName().trim() : "Worker");
+        user.setPhone(request.getPhone());
+        if (request.getDateOfBirth() != null && !request.getDateOfBirth().trim().isEmpty()) {
+            user.setDateOfBirth(LocalDate.parse(request.getDateOfBirth().trim()));
+        }
+        user.setGender(request.getGender());
+        user.setRole(User.Role.WORKER);
+        user.setMustChangePassword(true);
+        User savedUser = userRepository.save(user);
+
+        // 6. Create and save Worker
+        Worker worker = new Worker();
+        worker.setUser(savedUser);
+        worker.setBranch(targetBranch);
+        worker.setEmployeeId(employeeId);
+        worker.setDesignation(designationStr);
+        worker.setSalary(request.getSalary());
+        if (request.getHireDate() != null && !request.getHireDate().trim().isEmpty()) {
+            worker.setHireDate(LocalDate.parse(request.getHireDate().trim()));
+        } else {
+            worker.setHireDate(LocalDate.now());
+        }
+        worker.setStatus(Worker.WorkerStatus.ACTIVE);
+
+        Worker savedWorker = workerRepository.save(worker);
+
+        return new WorkerCreationResponse(
+                true,
+                "Worker created successfully",
+                WorkerCreationResponse.WorkerSummary.fromWorker(savedWorker),
+                temporaryPassword
+        );
+    }
+
+    @Transactional
+    public WorkerCreationResponse resetWorkerPassword(Long workerId) {
+        Long currentUserId = getCurrentUserId();
+        if (currentUserId == null) {
+            throw new AccessDeniedException("User not authenticated");
+        }
+
+        Worker worker = workerRepository.findById(workerId)
+                .orElseThrow(() -> new IllegalArgumentException("Worker not found"));
+
+        // Validate authorization: caller must be Admin of worker's branch or Owner of the organization
+        Branch workerBranch = worker.getBranch();
+        Admin admin = adminRepository.findByUserId(currentUserId).orElse(null);
+        if (admin != null) {
+            if (!admin.getBranch().getId().equals(workerBranch.getId())) {
+                throw new AccessDeniedException("Unauthorized: Cannot reset password for worker in another branch");
+            }
+        } else {
+            List<Organization> orgs = organizationRepository.findByOwnerId(currentUserId);
+            if (orgs.isEmpty() || !workerBranch.getOrganization().getId().equals(orgs.get(0).getId())) {
+                throw new AccessDeniedException("Unauthorized: Cannot reset password for this worker");
+            }
+        }
+
+        String newTempPassword = passwordGenerator.generateTemporaryPassword();
+        User workerUser = worker.getUser();
+        workerUser.setPassword(passwordEncoder.encode(newTempPassword));
+        workerUser.setMustChangePassword(true);
+        userRepository.save(workerUser);
+
+        return new WorkerCreationResponse(
+                true,
+                "Temporary password generated successfully",
+                WorkerCreationResponse.WorkerSummary.fromWorker(worker),
+                newTempPassword
+        );
+    }
     
     @Transactional
     public Worker createWorker(Worker worker, String email, String password, String name) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal userPrincipal = (UserPrincipal) auth.getPrincipal();
-        Long currentUserId = userPrincipal.getId();
-
-        Branch targetBranch = null;
-
-        // Check if creator is ADMIN
-        Admin admin = adminRepository.findByUserId(currentUserId).orElse(null);
-        if (admin != null) {
-            // Admin must create workers ONLY under their own assigned branch
-            targetBranch = admin.getBranch();
-        } else {
-            // Check if creator is OWNER
-            List<Organization> orgs = organizationRepository.findByOwnerId(currentUserId);
-            if (!orgs.isEmpty()) {
-                if (worker.getBranch() != null && worker.getBranch().getId() != null) {
-                    Branch b = branchRepository.findById(worker.getBranch().getId()).orElse(null);
-                    if (b != null && b.getOrganization().getId().equals(orgs.get(0).getId())) {
-                        targetBranch = b;
-                    }
-                }
-            }
-        }
+        Long currentUserId = getCurrentUserId();
+        Branch targetBranch = resolveTargetBranch(currentUserId, worker.getBranch() != null ? worker.getBranch().getId() : null);
 
         if (targetBranch == null) {
             throw new AccessDeniedException("Unauthorized: Cannot assign worker to specified branch");
@@ -95,8 +184,12 @@ public class WorkerService {
                 ? password.trim()
                 : passwordGenerator.generateTemporaryPassword();
 
+        String empId = (worker.getEmployeeId() != null && !worker.getEmployeeId().trim().isEmpty())
+                ? worker.getEmployeeId().trim()
+                : generateUniqueEmployeeId(targetBranch);
+
         String workerUsername = generateWorkerUsername(
-                worker.getEmployeeId() != null ? worker.getEmployeeId() : name,
+                name != null ? name : empId,
                 targetBranch.getBranchCode()
         );
 
@@ -111,6 +204,7 @@ public class WorkerService {
         
         worker.setUser(savedUser);
         worker.setBranch(targetBranch);
+        worker.setEmployeeId(empId);
         
         return workerRepository.save(worker);
     }
@@ -120,11 +214,21 @@ public class WorkerService {
         Worker worker = workerRepository.findById(id).orElse(null);
         if (worker == null) return null;
         
-        worker.setEmployeeId(workerDetails.getEmployeeId());
-        worker.setDesignation(workerDetails.getDesignation());
-        worker.setSalary(workerDetails.getSalary());
-        worker.setHireDate(workerDetails.getHireDate());
-        worker.setStatus(workerDetails.getStatus());
+        if (workerDetails.getEmployeeId() != null) {
+            worker.setEmployeeId(workerDetails.getEmployeeId());
+        }
+        if (workerDetails.getDesignation() != null) {
+            worker.setDesignation(workerDetails.getDesignation());
+        }
+        if (workerDetails.getSalary() != null) {
+            worker.setSalary(workerDetails.getSalary());
+        }
+        if (workerDetails.getHireDate() != null) {
+            worker.setHireDate(workerDetails.getHireDate());
+        }
+        if (workerDetails.getStatus() != null) {
+            worker.setStatus(workerDetails.getStatus());
+        }
         
         return workerRepository.save(worker);
     }
@@ -134,11 +238,47 @@ public class WorkerService {
         workerRepository.deleteById(id);
     }
 
-    private String generateWorkerUsername(String identifier, String branchCode) {
-        String base = (identifier != null ? identifier.toLowerCase().replaceAll("[^a-z0-9]", "") : "worker");
+    private Branch resolveTargetBranch(Long currentUserId, Long requestedBranchId) {
+        // If caller is Admin -> branch is ALWAYS Admin's branch
+        Admin admin = adminRepository.findByUserId(currentUserId).orElse(null);
+        if (admin != null) {
+            return admin.getBranch();
+        }
+
+        // If caller is Owner -> branch must belong to Owner's organization
+        List<Organization> orgs = organizationRepository.findByOwnerId(currentUserId);
+        if (!orgs.isEmpty() && requestedBranchId != null) {
+            Branch b = branchRepository.findById(requestedBranchId).orElse(null);
+            if (b != null && b.getOrganization().getId().equals(orgs.get(0).getId())) {
+                return b;
+            }
+        }
+
+        return null;
+    }
+
+    private String generateUniqueEmployeeId(Branch branch) {
+        String codePrefix = (branch.getBranchCode() != null && !branch.getBranchCode().isEmpty())
+                ? branch.getBranchCode()
+                : ("BR" + branch.getId());
+
+        List<Worker> branchWorkers = workerRepository.findByBranchId(branch.getId());
+        int nextSeq = branchWorkers.size() + 1;
+        String candidate = String.format("%s-W%03d", codePrefix, nextSeq);
+
+        while (workerRepository.findByEmployeeId(candidate).isPresent()) {
+            nextSeq++;
+            candidate = String.format("%s-W%03d", codePrefix, nextSeq);
+        }
+        return candidate;
+    }
+
+    private String generateWorkerUsername(String name, String branchCode) {
+        String base = (name != null ? name.toLowerCase().replaceAll("[^a-z0-9]", "") : "worker");
         if (base.isEmpty()) base = "worker";
+
         String suffix = (branchCode != null ? branchCode.toLowerCase().replace("-", "") : "");
-        String username = base + "_" + suffix;
+        String username = base + "." + suffix;
         if (username.length() > 50) username = username.substring(0, 50);
 
         int counter = 1;

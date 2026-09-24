@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { authAPI } from '../services/api';
+import AppShell from '../components/AppShell';
 import './Dashboard.css';
 
 function Settings() {
-  const { user, logout } = useAuth();
-  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState('profile');
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     currentPassword: '',
@@ -18,11 +18,6 @@ function Settings() {
   });
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('');
-
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
 
   const handleInputChange = (e) => {
     setFormData({
@@ -92,64 +87,53 @@ function Settings() {
     }
   };
 
-  const dashboardPath = user?.role === 'OWNER' ? '/owner-dashboard' : 
-                        user?.role === 'ADMIN' ? '/admin-dashboard' : '/worker-dashboard';
-
   return (
-    <div className="dashboard">
-      <header className="dashboard-header">
-        <div className="header-left">
-          <h1>SEMS</h1>
-          <span className="user-role">{user?.role} Dashboard</span>
+    <AppShell pageTitle="System Settings">
+      <div className="dashboard-header">
+        <div>
+          <h2>System Settings</h2>
+          <p className="page-lead" style={{ margin: '4px 0 0 0' }}>Manage personal credentials, security keys, and enterprise profile attributes.</p>
         </div>
-        <div className="header-right">
-          <span className="user-name">Welcome, {user?.name}</span>
-          <button onClick={handleLogout} className="btn btn-secondary">Logout</button>
-        </div>
-      </header>
+      </div>
 
-      <div className="dashboard-content">
-        <aside className="sidebar">
-          <nav className="sidebar-nav">
-            <Link to={dashboardPath} className="nav-item">Dashboard</Link>
-            {user?.role === 'OWNER' && <Link to="/branches" className="nav-item">Branches</Link>}
-            {user?.role === 'OWNER' && <Link to="/admins" className="nav-item">Admins</Link>}
-            {user?.role === 'OWNER' && <Link to="/owner-workers" className="nav-item">Workers</Link>}
-            {user?.role === 'ADMIN' && <Link to="/workers" className="nav-item">Workers</Link>}
-            <Link to="/tasks" className="nav-item">Tasks</Link>
-            <Link to="/attendance" className="nav-item">Attendance</Link>
-            {user?.role !== 'WORKER' && <Link to="/shifts" className="nav-item">Shifts</Link>}
-            <Link to="/inventory" className="nav-item">Inventory</Link>
-            {user?.role !== 'WORKER' && <Link to="/billing" className="nav-item">Billing</Link>}
-            {user?.role !== 'WORKER' && <Link to="/expenses" className="nav-item">Expenses</Link>}
-            {user?.role !== 'WORKER' && <Link to="/sales" className="nav-item">Sales</Link>}
-            <Link to="/logistics" className="nav-item">Logistics</Link>
-            {user?.role !== 'WORKER' && <Link to="/ai-insights" className="nav-item">AI Insights</Link>}
-            {user?.role !== 'WORKER' && <Link to="/reports" className="nav-item">Reports</Link>}
-            <Link to="/settings" className="nav-item active">Settings</Link>
-          </nav>
+      {message && (
+        <div className={`alert alert-${messageType}`} style={{ marginBottom: 20 }}>
+          {message}
+        </div>
+      )}
+
+      <div className="settings-container">
+        <aside className="settings-nav-col">
+          <button
+            type="button"
+            className={`settings-tab-btn ${activeTab === 'profile' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('profile'); setMessage(''); }}
+          >
+            Profile Information
+          </button>
+          <button
+            type="button"
+            className={`settings-tab-btn ${activeTab === 'security' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('security'); setMessage(''); }}
+          >
+            Security & Password
+          </button>
+          <button
+            type="button"
+            className={`settings-tab-btn ${activeTab === 'account' ? 'active' : ''}`}
+            onClick={() => { setActiveTab('account'); setMessage(''); }}
+          >
+            Account Identifiers
+          </button>
         </aside>
 
-        <main className="main-content">
-          <div className="dashboard-header">
-            <h2>Settings</h2>
-            <div>
-              <button onClick={() => navigate(dashboardPath)} className="btn btn-secondary">Back to Dashboard</button>
-            </div>
-          </div>
-
-          {message && (
-            <div className={`alert alert-${messageType}`}>
-              {message}
-            </div>
-          )}
-
-          <div className="settings-container">
+        <section className="settings-content-col">
+          {activeTab === 'profile' && (
             <div className="settings-section">
               <h3>Profile Information</h3>
               <form onSubmit={handleProfileUpdate}>
                 <div className="form-group">
-                  <label>Name</label>
+                  <label>Full Name</label>
                   <input
                     type="text"
                     name="name"
@@ -159,7 +143,7 @@ function Settings() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Email</label>
+                  <label>Email Address</label>
                   <input
                     type="email"
                     name="email"
@@ -169,7 +153,7 @@ function Settings() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Phone</label>
+                  <label>Phone Number</label>
                   <input
                     type="text"
                     name="phone"
@@ -178,7 +162,7 @@ function Settings() {
                   />
                 </div>
                 <div className="form-group">
-                  <label>Role</label>
+                  <label>Enterprise Role</label>
                   <input
                     type="text"
                     value={user?.role}
@@ -187,12 +171,14 @@ function Settings() {
                 </div>
                 <div className="form-actions">
                   <button type="submit" className="btn btn-primary" disabled={loading}>
-                    {loading ? 'Updating...' : 'Update Profile'}
+                    {loading ? 'Updating...' : 'Save Profile Changes'}
                   </button>
                 </div>
               </form>
             </div>
+          )}
 
+          {activeTab === 'security' && (
             <div className="settings-section">
               <h3>Change Password</h3>
               <form onSubmit={handlePasswordChange}>
@@ -230,73 +216,75 @@ function Settings() {
                 </div>
                 <div className="form-actions">
                   <button type="submit" className="btn btn-primary" disabled={loading}>
-                    {loading ? 'Changing...' : 'Change Password'}
+                    {loading ? 'Updating...' : 'Update Password'}
                   </button>
                 </div>
               </form>
             </div>
+          )}
 
+          {activeTab === 'account' && (
             <div className="settings-section">
-              <h3>Account Information</h3>
+              <h3>Account Identifiers</h3>
               <div className="info-grid">
                 <div className="info-item">
-                  <label>User ID:</label>
-                  <span>{user?.id}</span>
+                  <label>User ID</label>
+                  <span>{user?.id || '—'}</span>
                 </div>
                 {user?.branchId && (
                   <div className="info-item">
-                    <label>Branch ID:</label>
+                    <label>Branch ID</label>
                     <span>{user.branchId}</span>
                   </div>
                 )}
                 {user?.branchName && (
                   <div className="info-item">
-                    <label>Branch Name:</label>
+                    <label>Branch Name</label>
                     <span>{user.branchName}</span>
                   </div>
                 )}
                 {user?.adminId && (
                   <div className="info-item">
-                    <label>Admin ID:</label>
+                    <label>Admin ID</label>
                     <span>{user.adminId}</span>
                   </div>
                 )}
                 {user?.workerId && (
                   <div className="info-item">
-                    <label>Worker ID:</label>
+                    <label>Worker ID</label>
                     <span>{user.workerId}</span>
                   </div>
                 )}
                 {user?.employeeId && (
                   <div className="info-item">
-                    <label>Employee ID:</label>
+                    <label>Employee ID</label>
                     <span>{user.employeeId}</span>
                   </div>
                 )}
                 {user?.designation && (
                   <div className="info-item">
-                    <label>Designation:</label>
+                    <label>Designation</label>
                     <span>{user.designation}</span>
                   </div>
                 )}
                 {user?.organizationId && (
                   <div className="info-item">
-                    <label>Organization ID:</label>
+                    <label>Organization ID</label>
                     <span>{user.organizationId}</span>
                   </div>
                 )}
                 {user?.organizationName && (
                   <div className="info-item">
-                    <label>Organization Name:</label>
+                    <label>Organization Name</label>
                     <span>{user.organizationName}</span>
                   </div>
                 )}
               </div>
             </div>
-          </div>
-        </main>
+          )}
+        </section>
       </div>
-    </div>
+    </AppShell>
   );
 }
 

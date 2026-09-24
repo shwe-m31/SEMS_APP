@@ -61,10 +61,10 @@ INSERT INTO users (email, password, name, phone, date_of_birth, gender, role) VA
 -- ============================================
 -- INSERT ADMINS (Managers) mapping to branches
 -- ============================================
-INSERT INTO admins (user_id, branch_id, designation) VALUES
-(2, 1, 'Branch Manager'),
-(3, 2, 'Branch Manager'),
-(4, 3, 'Branch Manager');
+INSERT INTO admins (user_id, branch_id, designation, temporary_password) VALUES
+(2, 1, 'Branch Manager', 'password'),
+(3, 2, 'Branch Manager', 'password'),
+(4, 3, 'Branch Manager', 'password');
 
 -- ============================================
 -- INSERT WORKER USERS - CHENNAI BRANCH
